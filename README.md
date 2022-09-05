@@ -12,6 +12,6 @@ pip install contextplt
 ```
 
 # Usage
-See documentation page : https://toshiakiasakura.github.io/contextplt/
+See documentation page : https://toshiakiasakura.github.io/myforestplot/
 
 
