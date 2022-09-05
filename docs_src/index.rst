@@ -16,10 +16,9 @@ MyForestplot documentation
 **Useful links**: |nbsp| `Source Repository <https://github.com/toshiakiasakura/myforestplot>`_
 |nbsp| | |nbsp| `Issues & Ideas <https://github.com/toshiakiasakura/myforestplot/issues>`_
 
-What is contextplt? 
+What is MyForestplot? 
 -------------------
-contextplt is a Python package producing contextmanger inferences 
-to create matplotlib based figures more efficiently. 
+MyForestplot is a Python package helping create forestplot. 
 Codes and usage is explained in :doc:`usage page<notebooks/1_quickstart>`.
 
 Installation
