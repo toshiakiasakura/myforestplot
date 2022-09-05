@@ -64,7 +64,8 @@
    "id": "b6f1f90f-416e-478c-a7ce-9063e4bc9c18",
    "metadata": {},
    "source": [
-    "## Create pretty statsmodels result dataframe"
+    "## Create pretty statsmodels result dataframe\n",
+    "titanic data can be downloaded from https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv."
    ]
   },
   {

@@ -37,7 +37,7 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 html_context = {
   'display_github': True,
   'github_user': 'toshiakiasakura',
-  'github_repo': 'contextplt',
+  'github_repo': 'myforestplot',
   'github_version': 'main/docs_src/',
 }
 
