@@ -1,6 +1,6 @@
 # intermediate files
 *.xlsx
-*.csv
+#*.csv
 *.swp
 ~*
 
