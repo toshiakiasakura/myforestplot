@@ -9,7 +9,7 @@ Create forestplot by python more easily and intuitively.
 
 # Installation
 ```bash
-pip install contextplt
+pip install myforestplot
 ```
 
 # Usage
