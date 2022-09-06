@@ -75,14 +75,32 @@ class BaseForestplot():
                  xerr_lower: str = "xerr_lower", 
                  xerr_upper: str = "xerr_upper", 
                  y_adj: float = 0,
-                 errorbar_kwds: dict = None,
-                 ref_kwds: dict = None):
+                 errorbar_kwds: Optional[dict] = None,
+                 ref_kwds: Optional[dict] = None,
+                 df: Optional[pd.DataFrame] = None,
+                 errorbar_color: Optional[str] = None,
+                 ref_color: Optional[str] = None,
+                 label: Optional[str] = None,
+                 ):
         """
 
         Args:
-            kwds: Passed to ax.errorbar function.
+            risk: Column name for risk.
+            xerr_lower: Column name for xerr_lower.
+            xerr_upper: Column name for xerr_upper.
+            y_adj: For this value, plotting is moved. 
+            errorbar_kwds: Passed to ax.errorbar function.
+            ref_kwds: Passed to ax.scatter function.
+            df: Dataframe for another result.
+            errorbar_color: If specified, ecolor and coloer in erorrbar_kwds is 
+                changed to this value.
+            ref_color: If specified, ecolor and coloer in ref_kwds is 
+                changed to this value.
+            label: Label for stratified drawings. Passed to ax.errorbar.
         """
         y_index = self.y_index + y_adj
+        if df is None:
+            df = self.df
         if errorbar_kwds is None:
             errorbar_kwds = dict(fmt="o", 
                                  capsize=5, 
@@ -90,17 +108,26 @@ class BaseForestplot():
                                  ecolor="black", 
                                  color='white'
                                  )
+        if errorbar_color is not None:
+            errorbar_kwds["ecolor"] = errorbar_color
+            errorbar_kwds["color"] = errorbar_color
+
         if ref_kwds is None:
             ref_kwds = dict(marker="s", s=20, color="black")
-        cond = self.df[risk].notnull()
-        self.ax2.errorbar(self.df.loc[cond, risk],
+        if ref_color is not None:
+            ref_kwds["color"] = ref_color
+
+
+        cond = df[risk].notnull()
+        self.ax2.errorbar(df.loc[cond, risk],
                           y_index[cond],
-                          xerr=self.df.loc[cond, [xerr_lower, xerr_upper]].T,
+                          xerr=df.loc[cond, [xerr_lower, xerr_upper]].T,
+                          label=label,
                           **errorbar_kwds
                           )
-        cond = self.df[risk].isnull()
-        self.df["ref"] = self.df[risk].mask(cond, 1).mask(~cond, np.nan)
-        self.ax2.scatter(self.df["ref"], y_index, **ref_kwds)
+        cond = df[risk].isnull()
+        df["ref"] = df[risk].mask(cond, 1).mask(~cond, np.nan)
+        self.ax2.scatter(df["ref"], y_index, **ref_kwds)
 
     def draw_horizontal_line(self,
                              y: float,
@@ -155,8 +182,14 @@ class BaseForestplot():
                       header_kwds: Optional[dict] = None,
                       duplicate_hide: bool = False,
                       replace: Optional[dict] = None,
+                      df: Optional[pd.DataFrame] = None,
                       ):
         """Embed strings/values of one column with header.
+
+        Args:
+            col: Column name for text.
+            x: x axis value of text position, ranging from 0 to 1.
+            df: Dataframe for another result.
         """
         y_index = self.y_index + y_adj
         if text_kwds is None:
@@ -166,8 +199,11 @@ class BaseForestplot():
         self.ax1.text(x, y_header, header, ha="left", va="center",
                       fontsize=fontsize, **header_kwds)
 
-        # Drop duplicated items
+        if df is None:
+            df = self.df
         ser = self.df[col]
+
+        # Drop duplicated items
         if duplicate_hide: 
             cond = ser.duplicated()
             ser = ser.mask(cond, "")
