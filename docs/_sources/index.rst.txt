@@ -17,8 +17,10 @@ MyForestplot documentation
 |nbsp| | |nbsp| `Issues & Ideas <https://github.com/toshiakiasakura/myforestplot/issues>`_
 
 What is MyForestplot? 
--------------------
-MyForestplot is a Python package helping create forestplot. 
+-----------------------
+MyForestplot is a Python package helping create forestplot. This myforestplot is 
+mainly designed to create forestplot for logistic/log binomial/robust poisson results, 
+meaning that tries to present ORs or RRs for categorical variables.
 Codes and usage is explained in :doc:`usage page<notebooks/1_quickstart>`.
 
 Installation
