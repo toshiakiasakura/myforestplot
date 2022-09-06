@@ -40,6 +40,9 @@ class BaseForestplot():
 
     def figure_layout(self):
         """Create figure layout for plotting"""
+        plt.rcParams["figure.facecolor"] = "white"
+        plt.rcParams["savefig.facecolor"] = "white"
+
         self.fig = plt.figure(figsize=self.figsize, dpi=self.dpi)
         gs = GridSpec(1, sum(self.ratio))
 
@@ -201,7 +204,7 @@ class BaseForestplot():
 
         if df is None:
             df = self.df
-        ser = self.df[col]
+        ser = df[col]
 
         # Drop duplicated items
         if duplicate_hide: 
