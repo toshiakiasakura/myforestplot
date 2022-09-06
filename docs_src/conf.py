@@ -9,7 +9,9 @@
 project = 'myforestplot'
 copyright = '2022, Toshiaki Asakura'
 author = 'Toshiaki Asakura'
-release = '0.1.2'
+
+import myforestplot
+release = myforestplot.__version__
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
