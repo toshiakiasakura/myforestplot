@@ -7,7 +7,7 @@ import statsmodels
 def statsmodels_fitting_result_dataframe(
     res,
     alpha: float = 0.05,
-    accessor: Callable[np.array, np.array] = np.exp,
+    accessor: Callable[[np.array], np.array] = np.exp,
     ) -> pd.DataFrame:
     """Create category and item columns from the statsmodels result.
     Categorical results are divided into original column name (category) and
@@ -141,7 +141,7 @@ def statsmodels_pretty_result_dataframe(
     cont_cols: Optional[List[str]] = None,
     item_order: Dict[str, List[str]] = None,
     fml: str = ".2f",
-    accessor: Callable[np.array, np.array] = np.exp,
+    accessor: Callable[[np.array], np.array] = np.exp,
 ) -> pd.DataFrame:
     """Obtain pretty result dataframe from statsmodels results.
     Fitting coefficients are converted by np.exp.
