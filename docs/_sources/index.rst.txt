@@ -34,7 +34,13 @@ Installation
    :caption: How to use:
 
    notebooks/1_quickstart
+   notebooks/3_architecture
 
+.. toctree::
+   :maxdepth: 3
+   :caption: Gallery:
+
+   notebooks/2_gallery
 
 
 Indices and tables

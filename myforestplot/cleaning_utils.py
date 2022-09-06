@@ -28,6 +28,9 @@ def statsmodels_fitting_result_dataframe(
         if "[" in ind:
             s1, s2 = ind.split("[")
             rename_dic[ind] = s2[2:-1]
+            # For case of specifying Treatment in formula.
+            if "Treatment('" in s1:
+                s1 = s1.split(",")[0][2:]
             df.loc[ind, cate] = s1
     df.rename(index=rename_dic, inplace=True)
 

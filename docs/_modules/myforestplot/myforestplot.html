@@ -36,8 +36,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption" role="heading"><span class="caption-text">How to use:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/1_quickstart.html">Quickstart</a></li>
+</ul>
+
         </div>
       </div>
     </nav>
@@ -64,6 +67,7 @@
              
   <h1>Source code for myforestplot.myforestplot</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -71,216 +75,74 @@
 <span class="kn">import</span> <span class="nn">statsmodels</span>
 
 
-
-<div class="viewcode-block" id="statsmodels_fitting_result_dataframe"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.statsmodels_fitting_result_dataframe">[docs]</a><span class="k">def</span> <span class="nf">statsmodels_fitting_result_dataframe</span><span class="p">(</span>
-    <span class="n">res</span><span class="p">,</span>
-    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Create category and item columns from the statsmodels result.</span>
-<span class="sd">    Categorical results are divided into original column name (category) and </span>
-<span class="sd">    its items (item).</span>
+<div class="viewcode-block" id="BaseForestplot"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.BaseForestplot">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="nb">repr</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">BaseForestplot</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Class for creating forestplot.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        res: statsmodels&#39; fitting results.</span>
-<span class="sd">        alpha: The significance level for the confidence interval.</span>
+<span class="sd">        ratio: Ratio for text part and figure part.</span>
+<span class="sd">        df: Engineered dataframe.</span>
+<span class="sd">        hide_spines : Hide outlines of axes.  Takes &quot;right&quot;,&quot;top&quot;,&quot;bottom&quot;,&quot;left&quot; or these list.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">conf_int</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">))</span>
-    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;risk&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+    <span class="n">ratio</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">figsize</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">150</span>
+    <span class="n">hide_spines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">])</span> 
+    <span class="n">yticks_show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">yticklabels_show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">xticks_show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">text_axis_off</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="n">cate</span> <span class="o">=</span> <span class="s2">&quot;category&quot;</span>
-    <span class="n">df</span><span class="p">[</span><span class="n">cate</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="n">rename_dic</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s2">&quot;[&quot;</span> <span class="ow">in</span> <span class="n">ind</span><span class="p">:</span>
-            <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">ind</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span>
-            <span class="n">rename_dic</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">s2</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="n">cate</span><span class="p">]</span> <span class="o">=</span> <span class="n">s1</span>
-    <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">rename_dic</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
-    
-    <span class="c1"># Insert the same name for &quot;category&quot; in case of continuous variables.</span>
-    <span class="n">cond</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">cate</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
-    <span class="n">df</span><span class="p">[</span><span class="n">cate</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">cate</span><span class="p">]</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="s2">&quot;item&quot;</span><span class="p">})</span>
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">))</span>
-    <span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s2">&quot;item&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;item&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_y_index</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">figure_layout</span><span class="p">()</span>
 
-    <span class="c1"># drop Intercept.</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;Intercept&quot;</span><span class="p">]</span>
+<div class="viewcode-block" id="BaseForestplot.create_y_index"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.BaseForestplot.create_y_index">[docs]</a>    <span class="k">def</span> <span class="nf">create_y_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_row</span><span class="p">)])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ymax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_index</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_index</span><span class="p">)</span></div>
 
-    <span class="k">return</span> <span class="n">df</span></div>
+<div class="viewcode-block" id="BaseForestplot.figure_layout"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.BaseForestplot.figure_layout">[docs]</a>    <span class="k">def</span> <span class="nf">figure_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create figure layout for plotting&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dpi</span><span class="p">)</span>
+        <span class="n">gs</span> <span class="o">=</span> <span class="n">GridSpec</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ratio</span><span class="p">))</span>
 
-
-<div class="viewcode-block" id="add_pretty_risk_column"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.add_pretty_risk_column">[docs]</a><span class="k">def</span> <span class="nf">add_pretty_risk_column</span><span class="p">(</span><span class="n">res</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">risk</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lower</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">upper</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                           <span class="n">fml</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.2f&quot;</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Ref.&quot;</span>
-                           <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Add prrety risk string column.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        res: Dataframe contaning points and confidence intervals.</span>
-<span class="sd">        risk: point estimates of risk column name.</span>
-<span class="sd">        lower: lower confidence interval column name.</span>
-<span class="sd">        upper: upper confidence interval column name.</span>
-<span class="sd">        fml: formula for f string.</span>
-<span class="sd">        ref: if point esitmate column is empty, insert this string.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-        <span class="n">risk_v</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">risk</span><span class="p">]</span>
-        <span class="n">lower_v</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">lower</span><span class="p">]</span>
-        <span class="n">upper_v</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">upper</span><span class="p">]</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">risk_v</span><span class="si">:{</span><span class="n">fml</span><span class="si">}}</span><span class="s2"> (</span><span class="si">{</span><span class="n">lower_v</span><span class="si">:{</span><span class="n">fml</span><span class="si">}}</span><span class="s2">, </span><span class="si">{</span><span class="n">upper_v</span><span class="si">:{</span><span class="n">fml</span><span class="si">}}</span><span class="s2">)&quot;</span>
-        <span class="k">return</span> <span class="n">s</span>
-
-    <span class="n">ser</span> <span class="o">=</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-           <span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="n">risk</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">(),</span> <span class="n">ref</span><span class="p">)</span>
-           <span class="p">)</span>
-    <span class="k">return</span> <span class="n">ser</span></div>
-
-
-<div class="viewcode-block" id="count_category_frequency"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.count_category_frequency">[docs]</a><span class="k">def</span> <span class="nf">count_category_frequency</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> 
-                             <span class="n">categorical_cols</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-                             <span class="n">impute_continuous</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                             <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Count category frequency. </span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        df: Original dataframe.</span>
-<span class="sd">        categorical_cols: Columns for categorical variables.</span>
-<span class="sd">        impute_continuous: columns not specified as categorical_cols were </span>
-<span class="sd">            imputed for item and number of observations (nobs).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">sers</span> <span class="o">=</span> <span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
-             <span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
-             <span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
-             <span class="o">.</span><span class="n">stack</span><span class="p">()</span> 
-             <span class="p">)</span>
-             <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">categorical_cols</span><span class="p">]</span>
-    <span class="n">ser_sum</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">sers</span><span class="p">)</span>
-    <span class="n">df_nobs</span> <span class="o">=</span> <span class="p">(</span><span class="n">ser_sum</span>
-               <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-               <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;level_0&quot;</span><span class="p">:</span> <span class="s2">&quot;item&quot;</span><span class="p">,</span> 
-                                <span class="s2">&quot;level_1&quot;</span><span class="p">:</span> <span class="s2">&quot;category&quot;</span><span class="p">,</span> 
-                                <span class="mi">0</span><span class="p">:</span><span class="s2">&quot;nobs&quot;</span><span class="p">}</span>
-                       <span class="p">)</span>
-               <span class="p">)</span>
-
-    <span class="n">df_nobs</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">df_nobs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">))</span>
-    <span class="n">df_nobs</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s2">&quot;item&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">df_nobs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;item&quot;</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">df_nobs</span></div>
-
-
-<div class="viewcode-block" id="sort_category_item"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.sort_category_item">[docs]</a><span class="k">def</span> <span class="nf">sort_category_item</span><span class="p">(</span><span class="n">df_</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-                       <span class="n">categorical</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-                       <span class="n">order</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                       <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Sort category and item based on categorical values.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        df_ : dataframe containing category and item.</span>
-<span class="sd">        categorical: Dictionary containing column names and its order of items.</span>
-<span class="sd">        order : if specified, category is ordered based on this variable.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">order</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">order</span> <span class="o">=</span> <span class="n">df_</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
-
-    <span class="n">df_sorted</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">order</span><span class="p">:</span>
-        <span class="n">cond</span> <span class="o">=</span> <span class="n">df_</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span>
-        <span class="n">dfM</span> <span class="o">=</span> <span class="n">df_</span><span class="p">[</span><span class="n">cond</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">categorical</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">lis</span> <span class="o">=</span> <span class="n">categorical</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
-            <span class="n">sort_dic</span> <span class="o">=</span> <span class="p">{</span><span class="n">l</span><span class="p">:</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lis</span><span class="p">)}</span>
-            <span class="n">dfM</span> <span class="o">=</span> <span class="n">dfM</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;item&quot;</span><span class="p">,</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">sort_dic</span><span class="p">))</span>
-        <span class="n">df_sorted</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">df_sorted</span><span class="p">,</span> <span class="n">dfM</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">df_sorted</span></div>
-
-
-<div class="viewcode-block" id="statsmodels_pretty_result_dataframe"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.statsmodels_pretty_result_dataframe">[docs]</a><span class="k">def</span> <span class="nf">statsmodels_pretty_result_dataframe</span><span class="p">(</span>
-    <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-    <span class="n">res</span><span class="p">,</span>
-    <span class="n">categorical</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-    <span class="n">order</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">fml</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.2f&quot;</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Obtain pretty result dataframe from statsmodels results.</span>
-<span class="sd">    Fitting coefficients are converted by np.exp.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        data: original dataframe.</span>
-<span class="sd">        res: statsmodels results.</span>
-<span class="sd">        categorical: Dictionary containing column names and its order of items.</span>
-<span class="sd">        order : if specified, category is ordered based on this variable.</span>
-<span class="sd">        fml: formula for f string of pretty risk.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">nobs</span> <span class="o">!=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">((</span><span class="s2">&quot;Some observations were dropped when fitted, &quot;</span>
-                         <span class="s2">&quot;check number of observations&quot;</span>
-                        <span class="p">))</span>
-    <span class="n">df_res</span> <span class="o">=</span> <span class="n">statsmodels_fitting_result_dataframe</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
-    <span class="n">df_nobs</span> <span class="o">=</span> <span class="n">count_category_frequency</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">categorical</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    <span class="n">df_sum</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_res</span><span class="p">,</span> <span class="n">df_nobs</span><span class="p">,</span> 
-                      <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="s2">&quot;item&quot;</span><span class="p">],</span> 
-                      <span class="n">validate</span><span class="o">=</span><span class="s2">&quot;1:1&quot;</span><span class="p">,</span> 
-                      <span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span><span class="p">)</span>
-    <span class="n">df_sum</span> <span class="o">=</span> <span class="n">sort_category_item</span><span class="p">(</span><span class="n">df_sum</span><span class="p">,</span> <span class="n">categorical</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">)</span>
-    <span class="n">df_sum</span><span class="p">[</span><span class="s2">&quot;risk_pretty&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">add_pretty_risk_column</span><span class="p">(</span><span class="n">df_sum</span><span class="p">,</span>
-                                                   <span class="n">risk</span><span class="o">=</span><span class="s2">&quot;risk&quot;</span><span class="p">,</span>
-                                                   <span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                                                   <span class="n">upper</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                                                   <span class="n">fml</span><span class="o">=</span><span class="s2">&quot;.2f&quot;</span>
-                                                   <span class="p">)</span>
-    <span class="k">return</span> <span class="n">df_sum</span></div>
-
-
-<div class="viewcode-block" id="Forestplot"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.Forestplot">[docs]</a><span class="k">class</span> <span class="nc">Forestplot</span><span class="p">():</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
-                 <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-                 <span class="n">ratio</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> 
-                 <span class="n">figsize</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
-                 <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">150</span><span class="p">,</span>
-                 <span class="n">hide_spines</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">]</span>
-                 <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Class for creating forestplot.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            ratio: Ratio for text part and figure part.</span>
-<span class="sd">            df: Engineered dataframe.</span>
-<span class="sd">            hide_spines : Hide outlines of axes.  Takes &quot;right&quot;,&quot;top&quot;,&quot;bottom&quot;,&quot;left&quot; or these list.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="c1"># Figure layout.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
-        <span class="n">gs</span> <span class="o">=</span> <span class="n">GridSpec</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ratio</span><span class="p">))</span>
-
-        <span class="n">ss1</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">new_subplotspec</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">colspan</span><span class="o">=</span><span class="n">ratio</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">ss2</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">new_subplotspec</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">ratio</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">colspan</span><span class="o">=</span><span class="n">ratio</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">ss1</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">new_subplotspec</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">colspan</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ratio</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">ss2</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">new_subplotspec</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">colspan</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ratio</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">ss1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">ss2</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ax1</span><span class="p">)</span>
 
         <span class="c1"># Hide spines.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax1</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="n">hide_spines</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_axis_off</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ax1</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">hide_spines</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="c1"># Show or hide ticks</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">xticks_show</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">yticks_show</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_index</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">yticklabels_show</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
 
-        <span class="c1"># set attributes.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_row</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">y_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_row</span><span class="p">)])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ymax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_index</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_index</span><span class="p">)</span>
+        <span class="c1"># Figure restriction.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">ymin</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
 
         <span class="c1"># Create empty field for text part.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Forestplot.errorbar"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.Forestplot.errorbar">[docs]</a>    <span class="k">def</span> <span class="nf">errorbar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+<div class="viewcode-block" id="BaseForestplot.errorbar"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.BaseForestplot.errorbar">[docs]</a>    <span class="k">def</span> <span class="nf">errorbar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                  <span class="n">risk</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;risk&quot;</span><span class="p">,</span> 
                  <span class="n">xerr_lower</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;xerr_lower&quot;</span><span class="p">,</span> 
                  <span class="n">xerr_upper</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;xerr_upper&quot;</span><span class="p">,</span> 
+                 <span class="n">y_adj</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
                  <span class="n">errorbar_kwds</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">ref_kwds</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -288,6 +150,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            kwds: Passed to ax.errorbar function.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">y_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_index</span> <span class="o">+</span> <span class="n">y_adj</span>
         <span class="k">if</span> <span class="n">errorbar_kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">errorbar_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> 
                                  <span class="n">capsize</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
@@ -299,15 +162,15 @@
             <span class="n">ref_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
         <span class="n">cond</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">risk</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">cond</span><span class="p">,</span> <span class="n">risk</span><span class="p">],</span>
-                          <span class="bp">self</span><span class="o">.</span><span class="n">y_index</span><span class="p">[</span><span class="n">cond</span><span class="p">],</span>
+                          <span class="n">y_index</span><span class="p">[</span><span class="n">cond</span><span class="p">],</span>
                           <span class="n">xerr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">cond</span><span class="p">,</span> <span class="p">[</span><span class="n">xerr_lower</span><span class="p">,</span> <span class="n">xerr_upper</span><span class="p">]]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
                           <span class="o">**</span><span class="n">errorbar_kwds</span>
                           <span class="p">)</span>
         <span class="n">cond</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">risk</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;ref&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">risk</span><span class="p">]</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="o">~</span><span class="n">cond</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;ref&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_index</span><span class="p">,</span> <span class="o">**</span><span class="n">ref_kwds</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;ref&quot;</span><span class="p">],</span> <span class="n">y_index</span><span class="p">,</span> <span class="o">**</span><span class="n">ref_kwds</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Forestplot.draw_horizontal_line"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.Forestplot.draw_horizontal_line">[docs]</a>    <span class="k">def</span> <span class="nf">draw_horizontal_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="BaseForestplot.draw_horizontal_line"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.BaseForestplot.draw_horizontal_line">[docs]</a>    <span class="k">def</span> <span class="nf">draw_horizontal_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                              <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                              <span class="n">xmin_ax1</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
                              <span class="n">xmax_ax1</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span> 
@@ -326,9 +189,9 @@
                          <span class="n">zorder</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
                          <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Forestplot.horizontal_variable_separators"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.Forestplot.horizontal_variable_separators">[docs]</a>    <span class="k">def</span> <span class="nf">horizontal_variable_separators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+<div class="viewcode-block" id="BaseForestplot.horizontal_variable_separators"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.BaseForestplot.horizontal_variable_separators">[docs]</a>    <span class="k">def</span> <span class="nf">horizontal_variable_separators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                                        <span class="n">xmin_ax1</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
-                                       <span class="n">xmax_ax1</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span> 
+                                       <span class="n">xmax_ax1</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
                                        <span class="n">kwds</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Draw horizontal lines for seprating variables.</span>
 
@@ -339,18 +202,23 @@
         <span class="n">cate_y_index</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cond</span><span class="p">[</span><span class="n">cond</span><span class="o">==</span><span class="kc">False</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
         <span class="n">hlines</span> <span class="o">=</span> <span class="n">cate_y_index</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span>
         <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+
+        <span class="c1"># to cover figure part.</span>
+        <span class="k">if</span> <span class="n">xmax_ax1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">xmax_ax1</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">ratio</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mf">1.1</span>
         <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">hlines</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">draw_horizontal_line</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> 
                                       <span class="n">xmin_ax1</span><span class="o">=</span><span class="n">xmin_ax1</span><span class="p">,</span> 
                                       <span class="n">xmax_ax1</span><span class="o">=</span><span class="n">xmax_ax1</span><span class="p">,</span> 
                                       <span class="n">kwds</span><span class="o">=</span><span class="n">kwds</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Forestplot.embed_strings"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.Forestplot.embed_strings">[docs]</a>    <span class="k">def</span> <span class="nf">embed_strings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+<div class="viewcode-block" id="BaseForestplot.embed_strings"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.BaseForestplot.embed_strings">[docs]</a>    <span class="k">def</span> <span class="nf">embed_strings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                       <span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
                       <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
                       <span class="n">header</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
-                      <span class="n">fontsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
-                      <span class="n">y_header</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
+                      <span class="n">fontsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                      <span class="n">y_header</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+                      <span class="n">y_adj</span> <span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
                       <span class="n">text_kwds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="n">header_kwds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="n">duplicate_hide</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -358,6 +226,7 @@
                       <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Embed strings/values of one column with header.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">y_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_index</span> <span class="o">+</span> <span class="n">y_adj</span>
         <span class="k">if</span> <span class="n">text_kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">text_kwds</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">header_kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -365,6 +234,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ax1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_header</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
                       <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span> <span class="o">**</span><span class="n">header_kwds</span><span class="p">)</span>
 
+        <span class="c1"># Drop duplicated items</span>
         <span class="n">ser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">duplicate_hide</span><span class="p">:</span> 
             <span class="n">cond</span> <span class="o">=</span> <span class="n">ser</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span>
@@ -372,7 +242,7 @@
         <span class="k">if</span> <span class="n">replace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">ser</span> <span class="o">=</span> <span class="n">ser</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">replace</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">text</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_index</span><span class="p">,</span> <span class="n">ser</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">text</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">y_index</span><span class="p">,</span> <span class="n">ser</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ax1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
                           <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span> <span class="o">**</span><span class="n">text_kwds</span><span class="p">)</span></div></div>
 

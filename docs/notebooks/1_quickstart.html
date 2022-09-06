@@ -22,6 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Usage" href="3_architecture.html" />
     <link rel="prev" title="MyForestplot documentation" href="../index.html" /> 
 </head>
 
@@ -47,6 +48,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#Create-forestplot">Create forestplot</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="3_architecture.html">Usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Gallery:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="2_gallery.html">BaseForestplot</a></li>
 </ul>
 
         </div>
@@ -365,6 +371,8 @@ div.rendered_html tbody tr:hover {
 <span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
 <span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
 
+<span class="kn">import</span> <span class="nn">myforestplot</span> <span class="k">as</span> <span class="nn">mfp</span>
+
 <span class="o">%</span><span class="k">load_ext</span> watermark
 <span class="o">%</span><span class="k">watermark</span> -n -u -v -iv -w -p graphviz
 </pre></div>
@@ -375,7 +383,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Last updated: Mon Sep 05 2022
+Last updated: Tue Sep 06 2022
 
 Python implementation: CPython
 Python version       : 3.9.7
@@ -383,28 +391,21 @@ IPython version      : 8.0.1
 
 graphviz: not installed
 
-matplotlib : 3.5.1
-numpy      : 1.21.5
-statsmodels: 0.13.2
-pandas     : 1.4.1
+statsmodels : 0.13.2
+numpy       : 1.21.5
+pandas      : 1.4.1
+matplotlib  : 3.5.1
+myforestplot: 0.1.3
 
 Watermark: 2.3.1
 
 </pre></div></div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">myforestplot</span> <span class="k">as</span> <span class="nn">mfp</span>
-</pre></div>
-</div>
-</div>
 <section id="Create-pretty-statsmodels-result-dataframe">
 <h2>Create pretty statsmodels result dataframe<a class="headerlink" href="#Create-pretty-statsmodels-result-dataframe" title="Permalink to this heading">¶</a></h2>
 <p>titanic data can be downloaded from <a class="reference external" href="https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv">https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv</a>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">titanic</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;titanic.csv&quot;</span><span class="p">)</span>
@@ -414,7 +415,7 @@ Watermark: 2.3.1
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="s2">&quot;survived ~ sex + age + embark_town&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">titanic</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
@@ -432,7 +433,7 @@ Optimization terminated successfully.
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
@@ -440,7 +441,7 @@ Optimization terminated successfully.
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -456,10 +457,10 @@ Optimization terminated successfully.
   <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>  <td>     4</td>
 </tr>
 <tr>
-  <th>Date:</th>            <td>Mon, 05 Sep 2022</td> <th>  Pseudo R-squ.:     </th>  <td>0.2444</td>
+  <th>Date:</th>            <td>Tue, 06 Sep 2022</td> <th>  Pseudo R-squ.:     </th>  <td>0.2444</td>
 </tr>
 <tr>
-  <th>Time:</th>                <td>15:25:50</td>     <th>  Log-Likelihood:    </th> <td> -363.04</td>
+  <th>Time:</th>                <td>12:54:23</td>     <th>  Log-Likelihood:    </th> <td> -363.04</td>
 </tr>
 <tr>
   <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th> <td> -480.45</td>
@@ -491,27 +492,22 @@ Optimization terminated successfully.
 </div>
 <p>After fitting, clean dataframe.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">categorical</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;embark_town&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Southampton&#39;</span><span class="p">,</span> <span class="s1">&#39;Cherbourg&#39;</span><span class="p">,</span> <span class="s1">&#39;Queenstown&#39;</span><span class="p">],</span>
-               <span class="s2">&quot;sex&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;male&quot;</span><span class="p">,</span><span class="s2">&quot;female&quot;</span><span class="p">],</span>
-               <span class="p">}</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_sum</span> <span class="o">=</span> <span class="n">mfp</span><span class="o">.</span><span class="n">statsmodels_pretty_result_dataframe</span><span class="p">(</span><span class="n">titanic</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">categorical</span><span class="p">,</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;embark_town&quot;</span><span class="p">]</span>
+<span class="n">cont_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span>
+<span class="n">categorical</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;embark_town&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Southampton&#39;</span><span class="p">,</span> <span class="s1">&#39;Cherbourg&#39;</span><span class="p">,</span> <span class="s1">&#39;Queenstown&#39;</span><span class="p">]}</span>
+<span class="n">df_sum</span> <span class="o">=</span> <span class="n">mfp</span><span class="o">.</span><span class="n">statsmodels_pretty_result_dataframe</span><span class="p">(</span><span class="n">titanic</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span>
+                                                 <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">,</span>
+                                                 <span class="n">cont_cols</span><span class="o">=</span><span class="n">cont_cols</span><span class="p">,</span>
                                                  <span class="n">fml</span><span class="o">=</span><span class="s2">&quot;.3f&quot;</span><span class="p">,</span>
-                                                 <span class="n">order</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;embark_town&quot;</span><span class="p">])</span>
+                                                 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_sum</span>
@@ -519,7 +515,7 @@ Optimization terminated successfully.
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -572,33 +568,13 @@ Optimization terminated successfully.
       <td>0.08 (0.06, 0.12)</td>
     </tr>
     <tr>
-      <th>5</th>
+      <th>4</th>
       <td>sex</td>
       <td>female</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>259.0</td>
-      <td>Ref.</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>embark_town</td>
-      <td>Southampton</td>
-      <td>0.229654</td>
-      <td>0.581167</td>
-      <td>0.365332</td>
-      <td>554.0</td>
-      <td>0.37 (0.23, 0.58)</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>embark_town</td>
-      <td>Cherbourg</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>130.0</td>
       <td>Ref.</td>
     </tr>
     <tr>
@@ -611,6 +587,26 @@ Optimization terminated successfully.
       <td>28.0</td>
       <td>0.16 (0.06, 0.46)</td>
     </tr>
+    <tr>
+      <th>2</th>
+      <td>embark_town</td>
+      <td>Southampton</td>
+      <td>0.229654</td>
+      <td>0.581167</td>
+      <td>0.365332</td>
+      <td>554.0</td>
+      <td>0.37 (0.23, 0.58)</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>embark_town</td>
+      <td>Cherbourg</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>130.0</td>
+      <td>Ref.</td>
+    </tr>
   </tbody>
 </table>
 </div></div>
@@ -620,7 +616,7 @@ Optimization terminated successfully.
 <section id="Create-forestplot">
 <h2>Create forestplot<a class="headerlink" href="#Create-forestplot" title="Permalink to this heading">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df_sum</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -628,7 +624,7 @@ Optimization terminated successfully.
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;xerr_lower&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;risk&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -641,25 +637,27 @@ Optimization terminated successfully.
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fp</span> <span class="o">=</span> <span class="n">mfp</span><span class="o">.</span><span class="n">Forestplot</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;font.size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">fp</span> <span class="o">=</span> <span class="n">mfp</span><span class="o">.</span><span class="n">BaseForestplot</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
 <span class="n">fp</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">errorbar_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">fp</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])</span>
 <span class="n">fp</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])</span>
-<span class="n">fp</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">fp</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])</span>
+<span class="n">fp</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;OR&quot;</span><span class="p">)</span>
+<span class="n">fp</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
 <span class="n">fp</span><span class="o">.</span><span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-<span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span>
-<span class="n">fp</span><span class="o">.</span><span class="n">embed_strings</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;Category&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span>
+<span class="n">fp</span><span class="o">.</span><span class="n">embed_strings</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;Category&quot;</span><span class="p">,</span>
                  <span class="n">duplicate_hide</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="n">text_kwds</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">),</span>
                  <span class="n">header_kwds</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
                  <span class="p">)</span>
-<span class="n">fp</span><span class="o">.</span><span class="n">embed_strings</span><span class="p">(</span><span class="s2">&quot;item&quot;</span><span class="p">,</span> <span class="mf">0.36</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;age&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">})</span>
-<span class="n">fp</span><span class="o">.</span><span class="n">embed_strings</span><span class="p">(</span><span class="s2">&quot;nobs&quot;</span><span class="p">,</span> <span class="mf">0.60</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-<span class="n">fp</span><span class="o">.</span><span class="n">embed_strings</span><span class="p">(</span><span class="s2">&quot;risk_pretty&quot;</span><span class="p">,</span> <span class="mf">0.72</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;OR (95% CI)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+<span class="n">fp</span><span class="o">.</span><span class="n">embed_strings</span><span class="p">(</span><span class="s2">&quot;item&quot;</span><span class="p">,</span> <span class="mf">0.36</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;age&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">})</span>
+<span class="n">fp</span><span class="o">.</span><span class="n">embed_strings</span><span class="p">(</span><span class="s2">&quot;nobs&quot;</span><span class="p">,</span> <span class="mf">0.60</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;N&quot;</span><span class="p">)</span>
+<span class="n">fp</span><span class="o">.</span><span class="n">embed_strings</span><span class="p">(</span><span class="s2">&quot;risk_pretty&quot;</span><span class="p">,</span> <span class="mf">0.72</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;OR (95% CI)&quot;</span><span class="p">)</span>
 <span class="n">fp</span><span class="o">.</span><span class="n">horizontal_variable_separators</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -669,22 +667,25 @@ Optimization terminated successfully.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_1_quickstart_15_0.png" src="../_images/notebooks_1_quickstart_15_0.png" />
+<img alt="../_images/notebooks_1_quickstart_13_0.png" src="../_images/notebooks_1_quickstart_13_0.png" />
 </div>
 </div>
 <p>Since this figure does not include all the participants rows, let’s include that.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fp</span> <span class="o">=</span> <span class="n">mfp</span><span class="o">.</span><span class="n">Forestplot</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">fp</span> <span class="o">=</span> <span class="n">mfp</span><span class="o">.</span><span class="n">BaseForestplot</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
 <span class="n">fp</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">errorbar_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">fp</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])</span>
 <span class="n">fp</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])</span>
-<span class="n">fp</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">fp</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">fp</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])</span>
+<span class="n">fp</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
+<span class="n">fp</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;OR&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
 
 <span class="n">fp</span><span class="o">.</span><span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-<span class="n">fontsize</span> <span class="o">=</span> <span class="mi">8</span>
 <span class="n">y_header</span> <span class="o">=</span> <span class="mf">1.5</span>
 <span class="n">fp</span><span class="o">.</span><span class="n">embed_strings</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;Category&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span>
                  <span class="n">duplicate_hide</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -709,7 +710,7 @@ Optimization terminated successfully.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_1_quickstart_17_0.png" src="../_images/notebooks_1_quickstart_17_0.png" />
+<img alt="../_images/notebooks_1_quickstart_15_0.png" src="../_images/notebooks_1_quickstart_15_0.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -728,6 +729,7 @@ Optimization terminated successfully.
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../index.html" class="btn btn-neutral float-left" title="MyForestplot documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="3_architecture.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
