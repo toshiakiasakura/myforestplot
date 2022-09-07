@@ -75,8 +75,8 @@ class BaseForestplot():
 
     def errorbar(self, 
                  risk: str = "risk", 
-                 xerr_lower: str = "xerr_lower", 
-                 xerr_upper: str = "xerr_upper", 
+                 lower: Union[str, int] = 0, 
+                 upper: Union[str, int] = 1, 
                  y_adj: float = 0,
                  errorbar_kwds: Optional[dict] = None,
                  ref_kwds: Optional[dict] = None,
@@ -84,13 +84,14 @@ class BaseForestplot():
                  errorbar_color: Optional[str] = None,
                  ref_color: Optional[str] = None,
                  label: Optional[str] = None,
+                 log_scale: bool = False,
                  ):
         """
 
         Args:
             risk: Column name for risk.
-            xerr_lower: Column name for xerr_lower.
-            xerr_upper: Column name for xerr_upper.
+            lower: Column name for lower confidence interval.
+            upper: Column name for upper confidence interval.
             y_adj: For this value, plotting is moved. 
             errorbar_kwds: Passed to ax.errorbar function.
             ref_kwds: Passed to ax.scatter function.
@@ -100,10 +101,13 @@ class BaseForestplot():
             ref_color: If specified, ecolor and coloer in ref_kwds is 
                 changed to this value.
             label: Label for stratified drawings. Passed to ax.errorbar.
+            log_scale: Plot risk in log scale (np.log).
         """
         y_index = self.y_index + y_adj
+
         if df is None:
             df = self.df
+        df = df.copy()
         if errorbar_kwds is None:
             errorbar_kwds = dict(fmt="o", 
                                  capsize=5, 
@@ -120,16 +124,25 @@ class BaseForestplot():
         if ref_color is not None:
             ref_kwds["color"] = ref_color
 
+        if log_scale:
+            df[risk] = np.log(df[risk])
+            df[lower] = np.log(df[lower])
+            df[upper] = np.log(df[upper])
+
+        df["xerr_lower"] = df[risk] - df[lower]
+        df["xerr_upper"] = df[upper] - df[risk]
 
         cond = df[risk].notnull()
         self.ax2.errorbar(df.loc[cond, risk],
                           y_index[cond],
-                          xerr=df.loc[cond, [xerr_lower, xerr_upper]].T,
+                          xerr=df.loc[cond, ["xerr_lower", "xerr_upper"]].T,
                           label=label,
                           **errorbar_kwds
                           )
+
         cond = df[risk].isnull()
-        df["ref"] = df[risk].mask(cond, 1).mask(~cond, np.nan)
+        ref_v = 0 if log_scale else 1
+        df["ref"] = df[risk].mask(cond, ref_v).mask(~cond, np.nan)
         self.ax2.scatter(df["ref"], y_index, **ref_kwds)
 
     def draw_horizontal_line(self,
@@ -142,10 +155,8 @@ class BaseForestplot():
         """
         if kwds is None:
             kwds = dict(lw=1, ls="-", color="black")
-        xmin, xmax = self.ax2.get_xlim()
-        diff = xmax - xmin
-        xmin = xmin - diff*0.1
-        xmax = xmax + diff*0.1
+        xmin = -1_000_000
+        xmax =  1_000_000
         self.ax2.axhline(y=y, xmin=xmin, xmax=xmax, **kwds)
         self.ax1.axhline(y=y, xmin=xmin_ax1, xmax=xmax_ax1, 
                          zorder=-10, clip_on=False, 
