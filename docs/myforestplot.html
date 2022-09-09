@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>myforestplot package &mdash; myforestplot 0.1.8 documentation</title>
+  <title>myforestplot package &mdash; myforestplot 0.1.9 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -99,6 +99,109 @@
 <h1>myforestplot package<a class="headerlink" href="#myforestplot-package" title="Permalink to this heading">¶</a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-myforestplot.cleaning_utils">
+<span id="myforestplot-cleaning-utils-module"></span><h2>myforestplot.cleaning_utils module<a class="headerlink" href="#module-myforestplot.cleaning_utils" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="myforestplot.cleaning_utils.add_pretty_risk_column">
+<span class="sig-prename descclassname"><span class="pre">myforestplot.cleaning_utils.</span></span><span class="sig-name descname"><span class="pre">add_pretty_risk_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">risk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fml</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.2f'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Ref.'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/cleaning_utils.html#add_pretty_risk_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.cleaning_utils.add_pretty_risk_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add prrety risk string column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>res</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe contaning points and confidence intervals.</p></li>
+<li><p><strong>risk</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – point estimates of risk column name.</p></li>
+<li><p><strong>lower</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – lower confidence interval column name.</p></li>
+<li><p><strong>upper</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – upper confidence interval column name.</p></li>
+<li><p><strong>fml</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – formula for f string.</p></li>
+<li><p><strong>ref</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – if point esitmate column is empty, insert this string.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Series</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="myforestplot.cleaning_utils.count_category_frequency">
+<span class="sig-prename descclassname"><span class="pre">myforestplot.cleaning_utils.</span></span><span class="sig-name descname"><span class="pre">count_category_frequency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categorical_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impute_continuous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/cleaning_utils.html#count_category_frequency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.cleaning_utils.count_category_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Count category frequency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Original dataframe.</p></li>
+<li><p><strong>categorical_cols</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Columns for categorical variables.</p></li>
+<li><p><strong>impute_continuous</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – columns not specified as categorical_cols were
+imputed for item and number of observations (nobs).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="myforestplot.cleaning_utils.sort_category_item">
+<span class="sig-prename descclassname"><span class="pre">myforestplot.cleaning_utils.</span></span><span class="sig-name descname"><span class="pre">sort_category_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/cleaning_utils.html#sort_category_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.cleaning_utils.sort_category_item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sort category and item based on categorical values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – dataframe containing category and item.</p></li>
+<li><p><strong>categorical</strong> – Dictionary containing column names and its order of items.</p></li>
+<li><p><strong>order</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – if specified, category is ordered based on this variable.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="myforestplot.cleaning_utils.statsmodels_fitting_result_dataframe">
+<span class="sig-prename descclassname"><span class="pre">myforestplot.cleaning_utils.</span></span><span class="sig-name descname"><span class="pre">statsmodels_fitting_result_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha=0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accessor=&lt;ufunc</span> <span class="pre">'exp'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/cleaning_utils.html#statsmodels_fitting_result_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.cleaning_utils.statsmodels_fitting_result_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create category and item columns from the statsmodels result.
+Categorical results are divided into original column name (category) and
+its items (item).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>res</strong> – statsmodels’ fitting results.</p></li>
+<li><p><strong>alpha</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The significance level for the confidence interval.</p></li>
+<li><p><strong>accessor</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">array</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">array</span></code>]) – Function to access each model result, which is summarized and displayed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="myforestplot.cleaning_utils.statsmodels_pretty_result_dataframe">
+<span class="sig-prename descclassname"><span class="pre">myforestplot.cleaning_utils.</span></span><span class="sig-name descname"><span class="pre">statsmodels_pretty_result_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cont_cols=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_order=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fml='.2f'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accessor=&lt;ufunc</span> <span class="pre">'exp'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/cleaning_utils.html#statsmodels_pretty_result_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.cleaning_utils.statsmodels_pretty_result_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain pretty result dataframe from statsmodels results.
+Fitting coefficients are converted by np.exp.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – original dataframe.</p></li>
+<li><p><strong>res</strong> – statsmodels results.</p></li>
+<li><p><strong>categorical</strong> – Dictionary containing column names and its order of items.</p></li>
+<li><p><strong>order</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – if specified, category is ordered based on this variable.</p></li>
+<li><p><strong>fml</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – formula for f string of pretty risk.</p></li>
+<li><p><strong>accessor</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">array</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">array</span></code>]) – Function to access each model result, which is summarized and displayed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-myforestplot.myforestplot">
 <span id="myforestplot-myforestplot-module"></span><h2>myforestplot.myforestplot module<a class="headerlink" href="#module-myforestplot.myforestplot" title="Permalink to this heading">¶</a></h2>
@@ -242,6 +345,69 @@ changed to this value.</p></li>
 <span class="sig-name descname"><span class="pre">yticks_show</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#myforestplot.myforestplot.BaseForestPlot.yticks_show" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+</section>
+<section id="module-myforestplot.vis_utils">
+<span id="myforestplot-vis-utils-module"></span><h2>myforestplot.vis_utils module<a class="headerlink" href="#module-myforestplot.vis_utils" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="myforestplot.vis_utils.embed_strings_forestplot">
+<span class="sig-prename descclassname"><span class="pre">myforestplot.vis_utils.</span></span><span class="sig-name descname"><span class="pre">embed_strings_forestplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_kwds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header_kwds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/vis_utils.html#embed_strings_forestplot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.vis_utils.embed_strings_forestplot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Embed strings/values of one column with header.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ser</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Series</span></code>) – Values of this series will be embedded.</p></li>
+<li><p><strong>x</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – x axis value of text position, ranging from 0 to 1.</p></li>
+<li><p><strong>df</strong> – Dataframe for another result.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="myforestplot.vis_utils.errorbar_forestplot">
+<span class="sig-prename descclassname"><span class="pre">myforestplot.vis_utils.</span></span><span class="sig-name descname"><span class="pre">errorbar_forestplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">risk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'risk'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_adj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">errorbar_kwds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_kwds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">errorbar_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/vis_utils.html#errorbar_forestplot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.vis_utils.errorbar_forestplot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Error bar plot for a forest plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Axes</span></code>) – Axis to be drawn.</p></li>
+<li><p><strong>y_index</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">array</span></code>) – index to be plotted.</p></li>
+<li><p><strong>risk</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Column name for risk.</p></li>
+<li><p><strong>lower</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Column name for lower confidence interval.</p></li>
+<li><p><strong>upper</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Column name for upper confidence interval.</p></li>
+<li><p><strong>y_adj</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – For this value, plotting is moved.</p></li>
+<li><p><strong>errorbar_kwds</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]) – Passed to ax.errorbar function.</p></li>
+<li><p><strong>ref_kwds</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]) – Passed to ax.scatter function.</p></li>
+<li><p><strong>df</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]) – Dataframe for another result.</p></li>
+<li><p><strong>label</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Label for stratified drawings. Passed to ax.errorbar.</p></li>
+<li><p><strong>log_scale</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Plot risk in log scale (np.log).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="myforestplot.vis_utils.obtain_indexes_from_category_item">
+<span class="sig-prename descclassname"><span class="pre">myforestplot.vis_utils.</span></span><span class="sig-name descname"><span class="pre">obtain_indexes_from_category_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ser_cate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ser_item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/vis_utils.html#obtain_indexes_from_category_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.vis_utils.obtain_indexes_from_category_item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create index for category and item from series of category and item
+for vertically aligned labels and errorbar plot.
+It is noted that index has negative continuous values, starting from 0 to -n.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ser_cate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Series</span></code>) – Series of categories matched with ser_item.</p></li>
+<li><p><strong>ser_item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Series</span></code>) – Series of items.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">array</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">array</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Indexes for caategories and items.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
