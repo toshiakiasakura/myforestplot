@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 import statsmodels
 
+import myforestplot.vis_utils as vis_utils
+
 
 @dataclass(repr=True)
 class BaseForestPlot():
@@ -15,6 +17,8 @@ class BaseForestPlot():
         ratio: Ratio for text part and figure part.
         df: Engineered dataframe.
         hide_spines : Hide outlines of axes.  Takes "right","top","bottom","left" or these list.
+        vertical_align: Align categorical names above items. It requires dataframe to have 
+            "category" and "item" column names.
     """
     df: pd.DataFrame
     ratio: Tuple[float, float] = (8,3)
@@ -25,6 +29,7 @@ class BaseForestPlot():
     yticklabels_show: bool = False
     xticks_show: bool = True
     text_axis_off: bool = True
+    vertical_align: bool = False
 
     def __post_init__(self):
         self.df = self.df.reset_index(drop=True)
@@ -33,9 +38,25 @@ class BaseForestPlot():
         self.figure_layout()
 
     def create_y_index(self):
-        self.n_row = self.df.shape[0]
-        self.y_index = np.array([-i for i in range(self.n_row)])
-        self.ymax = np.max(self.y_index)
+        self.n_item = self.df.shape[0]
+        if self.vertical_align:
+            if "category" not in self.df.columns:
+                raise Exception("Need 'category' column for df variable.")
+            if "item" not in self.df.columns:
+                raise Exception("Need 'item' column for df variable.")
+
+            self.y_index_cate, self.y_index = (
+                vis_utils.obtain_indexes_from_category_item(
+                    self.df["category"],
+                    self.df["item"]
+                    )
+                )
+        else:
+            self.y_index = np.array([-i for i in range(self.n_item)])
+            cond = self.df["category"].duplicated()
+            self.y_index_cate = -np.array(cond[cond==False].index)
+
+        self.ymax = np.max(self.y_index_cate)
         self.ymin = np.min(self.y_index)
 
     def figure_layout(self):
@@ -103,47 +124,29 @@ class BaseForestPlot():
             label: Label for stratified drawings. Passed to ax.errorbar.
             log_scale: Plot risk in log scale (np.log).
         """
-        y_index = self.y_index + y_adj
-
         if df is None:
             df = self.df
-        df = df.copy()
-        if errorbar_kwds is None:
-            errorbar_kwds = dict(fmt="o", 
-                                 capsize=5, 
-                                 markeredgecolor="black",  
-                                 ecolor="black", 
-                                 color='white'
-                                 )
         if errorbar_color is not None:
             errorbar_kwds["ecolor"] = errorbar_color
             errorbar_kwds["color"] = errorbar_color
-
-        if ref_kwds is None:
-            ref_kwds = dict(marker="s", s=20, color="black")
         if ref_color is not None:
             ref_kwds["color"] = ref_color
 
-        if log_scale:
-            df[risk] = np.log(df[risk])
-            df[lower] = np.log(df[lower])
-            df[upper] = np.log(df[upper])
-
-        df["xerr_lower"] = df[risk] - df[lower]
-        df["xerr_upper"] = df[upper] - df[risk]
-
-        cond = df[risk].notnull()
-        self.ax2.errorbar(df.loc[cond, risk],
-                          y_index[cond],
-                          xerr=df.loc[cond, ["xerr_lower", "xerr_upper"]].T,
-                          label=label,
-                          **errorbar_kwds
-                          )
-
-        cond = df[risk].isnull()
-        ref_v = 0 if log_scale else 1
-        df["ref"] = df[risk].mask(cond, ref_v).mask(~cond, np.nan)
-        self.ax2.scatter(df["ref"], y_index, **ref_kwds)
+        vis_utils.errorbar_forestplot(
+            ax=self.ax2, 
+            y_index=self.y_index,
+            df=df,
+            risk=risk,
+            lower=lower,
+            upper=upper,
+            y_adj=y_adj,
+            errorbar_kwds=errorbar_kwds,
+            ref_kwds=ref_kwds,
+            errorbar_color=errorbar_color,
+            ref_color=ref_color,
+            label=label,
+            log_scale=log_scale,
+        )
 
     def draw_horizontal_line(self,
                              y: float,
@@ -171,9 +174,7 @@ class BaseForestPlot():
         Args:
             kwds: Passed to ax.axhline function.
         """
-        cond = self.df["category"].duplicated()
-        cate_y_index = -np.array(cond[cond==False].index)
-        hlines = cate_y_index.copy() + 0.5
+        hlines = self.y_index_cate.copy() + 0.5
         xmin, xmax = self.ax2.get_xlim()
 
         # to cover figure part.
@@ -205,31 +206,62 @@ class BaseForestPlot():
             x: x axis value of text position, ranging from 0 to 1.
             df: Dataframe for another result.
         """
-        y_index = self.y_index + y_adj
-        if text_kwds is None:
-            text_kwds = {}
-        if header_kwds is None:
-            header_kwds = {}
-        self.ax1.text(x, y_header, header, ha="left", va="center",
-                      fontsize=fontsize, **header_kwds)
-
         if df is None:
             df = self.df
         ser = df[col]
-
         # Drop duplicated items
         if duplicate_hide: 
             cond = ser.duplicated()
             ser = ser.mask(cond, "")
-        if replace is not None:
-            ser = ser.replace(replace)
 
-        for y, text in zip(y_index, ser):
-            self.ax1.text(x, y, text, ha="left", va="center",
-                          fontsize=fontsize, **text_kwds)
+        y_index = self.y_index + y_adj
 
+        vis_utils.embed_strings_forestplot(
+            ax=self.ax1,
+            ser=ser,
+            y_index=y_index,
+            x=x,
+            header=header,
+            fontsize=fontsize,
+            y_header=y_header,
+            text_kwds=text_kwds,
+            header_kwds=header_kwds,
+            replace=replace
+        )
 
+    def embed_cate_strings(self,
+                           col: str,
+                           x: float,
+                           header: str,
+                           fontsize: int = None,
+                           y_header: float = 1.0,
+                           y_adj : float = 0.0,
+                           text_kwds: Optional[dict] = None,
+                           header_kwds: Optional[dict] = None,
+                           replace: Optional[dict] = None,
+                           df: Optional[pd.DataFrame] = None,
+                           ):
+        """Embed category values on vertically aligned positions.
+        The position of strings become different only if self.vertical_align == True.
+        """
+        if df is None:
+            df = self.df
+        ser = df[col].drop_duplicates()
 
+        y_index = self.y_index_cate + y_adj
+
+        vis_utils.embed_strings_forestplot(
+            ax=self.ax1,
+            ser=ser,
+            y_index=y_index,
+            x=x,
+            header=header,
+            fontsize=fontsize,
+            y_header=y_header,
+            text_kwds=text_kwds,
+            header_kwds=header_kwds,
+            replace=replace
+        )
 
 
 
