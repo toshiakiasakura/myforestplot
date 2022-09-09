@@ -8,8 +8,8 @@ import statsmodels
 
 
 @dataclass(repr=True)
-class BaseForestplot():
-    """Class for creating forestplot.
+class BaseForestPlot():
+    """Class for creating a forest plot.
 
     Args:
         ratio: Ratio for text part and figure part.
