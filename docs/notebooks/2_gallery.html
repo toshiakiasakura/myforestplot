@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BaseForestplot &mdash; myforestplot 0.1.7 documentation</title>
+  <title>BaseForestplot &mdash; myforestplot 0.1.8 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="Usage" href="3_architecture.html" /> 
+    <link rel="prev" title="Architecture" href="3_architecture.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,14 +43,14 @@
               <p class="caption" role="heading"><span class="caption-text">How to use:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="1_quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="3_architecture.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_architecture.html">Architecture</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Gallery:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">BaseForestplot</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#Label-names,-ORs,-left-side-spines,-and-ylabel-ticks">Label names, ORs, left side spines, and ylabel ticks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Change-styles-of-errorbars-and-horizontal-lines">Change styles of errorbars and horizontal lines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Log-scale">Log scale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Log-scale-with-vertical-align-of-categories">Log scale with vertical align of categories</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Multiple-confidence-bands">Multiple confidence bands</a></li>
 </ul>
 </li>
@@ -386,7 +386,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Last updated: Wed Sep 07 2022
+Last updated: Fri Sep 09 2022
 
 Python implementation: CPython
 Python version       : 3.9.7
@@ -394,11 +394,11 @@ IPython version      : 8.0.1
 
 graphviz: not installed
 
+matplotlib  : 3.5.3
+statsmodels : 0.13.2
 pandas      : 1.4.1
 numpy       : 1.21.5
-statsmodels : 0.13.2
-matplotlib  : 3.5.3
-myforestplot: 0.1.6
+myforestplot: 0.1.7
 
 Watermark: 2.3.1
 
@@ -580,7 +580,7 @@ Optimization terminated successfully.
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;font.size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span>
-<span class="n">fp</span> <span class="o">=</span> <span class="n">mfp</span><span class="o">.</span><span class="n">BaseForestplot</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
+<span class="n">fp</span> <span class="o">=</span> <span class="n">mfp</span><span class="o">.</span><span class="n">BaseForestPlot</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
                     <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
                     <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>
                     <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
@@ -629,7 +629,7 @@ Optimization terminated successfully.
                      <span class="p">)</span>
 <span class="n">ref_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">26</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
 
-<span class="n">fp</span> <span class="o">=</span> <span class="n">mfp</span><span class="o">.</span><span class="n">BaseForestplot</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
+<span class="n">fp</span> <span class="o">=</span> <span class="n">mfp</span><span class="o">.</span><span class="n">BaseForestPlot</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
                     <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
                     <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>
                     <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
@@ -661,15 +661,16 @@ Optimization terminated successfully.
 </div>
 </div>
 </section>
-<section id="Log-scale">
-<h2>Log scale<a class="headerlink" href="#Log-scale" title="Permalink to this heading">¶</a></h2>
+<section id="Log-scale-with-vertical-align-of-categories">
+<h2>Log scale with vertical align of categories<a class="headerlink" href="#Log-scale-with-vertical-align-of-categories" title="Permalink to this heading">¶</a></h2>
 <p>Values are converted with np.log so that ticks should be edited by similarly np.log.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;font.size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span>
-<span class="n">fp</span> <span class="o">=</span> <span class="n">mfp</span><span class="o">.</span><span class="n">BaseForestplot</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
+<span class="n">fp</span> <span class="o">=</span> <span class="n">mfp</span><span class="o">.</span><span class="n">BaseForestPlot</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
+                        <span class="n">vertical_align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">fp</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">errorbar_kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">log_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="n">xticklabels</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
@@ -679,12 +680,11 @@ Optimization terminated successfully.
 <span class="n">fp</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;OR (log scale)&quot;</span><span class="p">)</span>
 <span class="n">fp</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
-<span class="n">fp</span><span class="o">.</span><span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-<span class="n">fp</span><span class="o">.</span><span class="n">embed_strings</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;Category&quot;</span><span class="p">,</span>
-                 <span class="n">duplicate_hide</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">text_kwds</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">),</span>
-                 <span class="n">header_kwds</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
-                 <span class="p">)</span>
+<span class="n">fp</span><span class="o">.</span><span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mf">0.3</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">fp</span><span class="o">.</span><span class="n">embed_cate_strings</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;Category&quot;</span><span class="p">,</span>
+                      <span class="n">text_kwds</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">),</span>
+                      <span class="n">header_kwds</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+                      <span class="p">)</span>
 <span class="n">fp</span><span class="o">.</span><span class="n">embed_strings</span><span class="p">(</span><span class="s2">&quot;item&quot;</span><span class="p">,</span> <span class="mf">0.36</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;age&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">})</span>
 <span class="n">fp</span><span class="o">.</span><span class="n">embed_strings</span><span class="p">(</span><span class="s2">&quot;nobs&quot;</span><span class="p">,</span> <span class="mf">0.60</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;N&quot;</span><span class="p">)</span>
 <span class="n">fp</span><span class="o">.</span><span class="n">embed_strings</span><span class="p">(</span><span class="s2">&quot;risk_pretty&quot;</span><span class="p">,</span> <span class="mf">0.72</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;OR (95% CI)&quot;</span><span class="p">)</span>
@@ -783,7 +783,7 @@ Optimization terminated successfully.
                      <span class="p">)</span>
 <span class="n">ref_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
 
-<span class="n">fp</span> <span class="o">=</span> <span class="n">mfp</span><span class="o">.</span><span class="n">BaseForestplot</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
+<span class="n">fp</span> <span class="o">=</span> <span class="n">mfp</span><span class="o">.</span><span class="n">BaseForestPlot</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
                     <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span>
                     <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>
                     <span class="n">df</span><span class="o">=</span><span class="n">df1</span><span class="p">,</span>
@@ -873,7 +873,7 @@ Optimization terminated successfully.
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="3_architecture.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="3_architecture.html" class="btn btn-neutral float-left" title="Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
