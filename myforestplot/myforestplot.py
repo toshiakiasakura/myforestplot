@@ -364,6 +364,9 @@ class ForestPlot():
                 if self.text_axis_off:
                     ax.set_axis_off()
 
+            # For horizontal line separator, specify ax field at first.
+            ax.scatter([0, 0, 1, 1], [self.ymin, 0, self.ymin, 0], color="white")
+
     def errorbar(self, 
                  index: int,
                  risk: str = "risk", 
@@ -504,21 +507,23 @@ class ForestPlot():
 
     def draw_horizontal_line(self,
                              y: float,
+                             scale: float = 0.1,
                              kwds: dict = None
                              ):
         """Draw horizontal line.
         """
         if kwds is None:
             kwds = dict(lw=1, ls="-", color="black")
-        for ax in self.axd.values():
-            xmin, xmax = ax.get_xaxis().get_data_interval()
+        for i,ax in self.axd.items():
+            xmin = 0
+            xmax = 1
             diff = xmax - xmin
-            xmin = xmin - diff*0.1
-            xmax = xmax + diff*0.1
+            xmin = xmin - diff*scale
+            xmax = xmax + diff*scale
             ax.axhline(y=y, xmin=xmin, xmax=xmax,
                        zorder=-10, clip_on=False, **kwds)
 
-    def horizontal_variable_separators(self, 
+    def horizontal_variable_separators(self, scale: float = 0.1,
                                        kwds: dict = None):
         """Draw horizontal lines for seprating variables.
 
@@ -528,7 +533,7 @@ class ForestPlot():
         hlines = self.y_index_cate.copy() + 0.5
 
         for y in hlines:
-            self.draw_horizontal_line(y=y, kwds=kwds)
+            self.draw_horizontal_line(y=y, scale=scale, kwds=kwds)
 
 
 @dataclass(repr=True)
