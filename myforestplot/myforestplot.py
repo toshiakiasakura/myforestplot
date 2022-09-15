@@ -265,7 +265,7 @@ class BaseForestPlot():
 
 
 @dataclass(repr=True)
-class MultiForestPlot():
+class ForestPlot():
     """
 
     Args:
@@ -285,6 +285,7 @@ class MultiForestPlot():
     yticks_show: bool = False
     yticklabels_show: bool = False
     xticks_show: bool = True
+    text_axis_off: bool = True
     hide_spines: List[str] = field(default_factory=lambda: ["left", "top", "right"]) 
     dpi: int = 150
     vertical_align: bool = False
@@ -326,7 +327,8 @@ class MultiForestPlot():
         for i,r_num in enumerate(self.ratio):
             for r in range(r_num):
                 mosaic[0].append(i+1)
-        self.fig = plt.figure(constrained_layout=False)
+        self.fig = plt.figure(constrained_layout=False, 
+                              figsize=self.figsize, dpi=self.dpi)
         self.axd = self.fig.subplot_mosaic(mosaic, sharex=False, sharey=True)
 
         # Figure restriction.
@@ -359,7 +361,8 @@ class MultiForestPlot():
                 # For text field.
                 ax.set_xlim([0,1])
                 ax.scatter([0, 0, 1, 1], [self.ymin, 0, self.ymin, 0], color="white")
-                ax.set_axis_off()
+                if self.text_axis_off:
+                    ax.set_axis_off()
 
     def errorbar(self, 
                  index: int,
@@ -498,3 +501,70 @@ class MultiForestPlot():
             header_kwds=header_kwds,
             replace=replace
         )
+
+    def draw_horizontal_line(self,
+                             y: float,
+                             kwds: dict = None
+                             ):
+        """Draw horizontal line.
+        """
+        if kwds is None:
+            kwds = dict(lw=1, ls="-", color="black")
+        for ax in self.axd.values():
+            xmin, xmax = ax.get_xaxis().get_data_interval()
+            diff = xmax - xmin
+            xmin = xmin - diff*0.1
+            xmax = xmax + diff*0.1
+            ax.axhline(y=y, xmin=xmin, xmax=xmax,
+                       zorder=-10, clip_on=False, **kwds)
+
+    def horizontal_variable_separators(self, 
+                                       kwds: dict = None):
+        """Draw horizontal lines for seprating variables.
+
+        Args:
+            kwds: Passed to ax.axhline function.
+        """
+        hlines = self.y_index_cate.copy() + 0.5
+
+        for y in hlines:
+            self.draw_horizontal_line(y=y, kwds=kwds)
+
+
+@dataclass(repr=True)
+class SimpleForestPlot(ForestPlot):
+    """Simple version of a forest plot, contaning one 
+    text field and one axis field.
+    """
+    def __post_init__(self):
+        if len(self.ratio) != 2:
+            raise Exception("Ratio should be length of 2.")
+        self.fig_ax_index = [2]
+
+        super().__post_init__()
+
+        self.ax1 = self.axd[1]
+        self.ax2 = self.axd[2]
+
+    def errorbar(self, **kwds):
+        if kwds is None:
+            kwds = {}
+        super().errorbar(index=2, **kwds)
+
+    def embed_strings(self, *args, **kwds):
+        args = (1,) + args
+        if kwds is None:
+            kwds = {}
+        super().embed_strings(*args, **kwds)
+
+    def embed_cate_strings(self, *args, **kwds):
+        args = (1,) + args
+        if kwds is None:
+            kwds = {}
+        super().embed_cate_strings(*args, **kwds)
+
+
+
+
+
+
