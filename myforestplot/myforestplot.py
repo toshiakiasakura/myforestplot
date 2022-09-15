@@ -35,7 +35,6 @@ class ForestPlot():
     dpi: int = 150
     vertical_align: bool = False
 
-
     def __post_init__(self):
         self.df = self.df.reset_index(drop=True)
 
@@ -173,7 +172,7 @@ class ForestPlot():
                       index: int,
                       col: str, 
                       x: float, 
-                      header: str, 
+                      header: str = "", 
                       fontsize: int = None,
                       y_header: float = 1.0,
                       y_adj : float = 0.0,
@@ -280,6 +279,43 @@ class ForestPlot():
         for y in hlines:
             self.draw_horizontal_line(y=y, scale=scale, kwds=kwds)
 
+    def draw_outer_marker(self, 
+                          index: int,
+                          lower: Union[str, int] = 0,
+                          upper: Union[str, int] = 1,
+                          lower_marker=4,
+                          upper_marker=5,
+                          df: Optional[pd.DataFrame] = None,
+                          log_scale: bool = False,
+                          kwds: dict = None,
+                          ):
+        ax = self.axd[index]
+        if kwds is None:
+            kwds = dict(s=20, color="black")
+        if df is None:
+            df = self.df
+        if log_scale:
+            df[lower] = np.log(df[lower])
+            df[upper] = np.log(df[upper])
+
+        xmin, xmax = ax.get_xlim()
+        diff = xmax - xmin
+        scale = 0.008
+        ser_lower = (df[lower]
+                     .mask(df[lower] > xmin, np.nan)
+                     .mask(df[lower] <= xmin, xmin + diff*scale)
+                     )
+
+        ser_upper = (df[upper]
+                     .mask(df[upper] < xmax, np.nan)
+                     .mask(df[upper] >= xmax, xmax - diff*scale)
+                     )
+
+        ax.scatter(ser_lower, self.y_index, zorder=5, 
+                   marker=lower_marker, **kwds)
+        ax.scatter(ser_upper, self.y_index, zorder=5, 
+                   marker=upper_marker, **kwds)
+
 
 @dataclass(repr=True)
 class SimpleForestPlot(ForestPlot):
@@ -296,24 +332,20 @@ class SimpleForestPlot(ForestPlot):
         self.ax1 = self.axd[1]
         self.ax2 = self.axd[2]
 
-    def errorbar(self, **kwds):
-        if kwds is None:
-            kwds = {}
-        super().errorbar(index=2, **kwds)
+    def errorbar(self, *args, **kwds):
+        super().errorbar(index=2, *args, **kwds)
 
     def embed_strings(self, *args, **kwds):
         args = (1,) + args
-        if kwds is None:
-            kwds = {}
         super().embed_strings(*args, **kwds)
 
     def embed_cate_strings(self, *args, **kwds):
         args = (1,) + args
-        if kwds is None:
-            kwds = {}
         super().embed_cate_strings(*args, **kwds)
 
-
+    def draw_outer_marker(self, *args, **kwds):
+        args = (2,) + args
+        super().draw_outer_marker(*args, **kwds)
 
 
 
