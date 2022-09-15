@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>myforestplot.cleaning_utils &mdash; myforestplot 0.1.9 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> myforestplot
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">How to use:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/1_quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/3_architecture.html">Architecture</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Gallery:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/2_gallery.html">BaseForestplot</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">myforestplot</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>myforestplot.cleaning_utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for myforestplot.cleaning_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">statsmodels</span>
+
+
+<div class="viewcode-block" id="statsmodels_fitting_result_dataframe"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.cleaning_utils.statsmodels_fitting_result_dataframe">[docs]</a><span class="k">def</span> <span class="nf">statsmodels_fitting_result_dataframe</span><span class="p">(</span>
+    <span class="n">res</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">accessor</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Create category and item columns from the statsmodels result.</span>
+<span class="sd">    Categorical results are divided into original column name (category) and</span>
+<span class="sd">    its items (item).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        res: statsmodels&#39; fitting results.</span>
+<span class="sd">        alpha: The significance level for the confidence interval.</span>
+<span class="sd">        accessor: Function to access each model result, which is summarized and displayed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">accessor</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">conf_int</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">))</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;risk&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">accessor</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="n">cate</span> <span class="o">=</span> <span class="s2">&quot;category&quot;</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">cate</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">rename_dic</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;[&quot;</span> <span class="ow">in</span> <span class="n">ind</span><span class="p">:</span>
+            <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">ind</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span>
+            <span class="n">rename_dic</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">s2</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># For case of specifying Treatment in formula.</span>
+            <span class="k">if</span> <span class="s2">&quot;Treatment(&#39;&quot;</span> <span class="ow">in</span> <span class="n">s1</span><span class="p">:</span>
+                <span class="n">s1</span> <span class="o">=</span> <span class="n">s1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">:]</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="n">cate</span><span class="p">]</span> <span class="o">=</span> <span class="n">s1</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">rename_dic</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Insert the same name for &quot;category&quot; in case of continuous variables.</span>
+    <span class="n">cond</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">cate</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">cate</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">cate</span><span class="p">]</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="s2">&quot;item&quot;</span><span class="p">})</span>
+
+    <span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">))</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s2">&quot;item&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;item&quot;</span><span class="p">))</span>
+
+    <span class="c1"># drop Intercept.</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;Intercept&quot;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="add_pretty_risk_column"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.cleaning_utils.add_pretty_risk_column">[docs]</a><span class="k">def</span> <span class="nf">add_pretty_risk_column</span><span class="p">(</span><span class="n">res</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">risk</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lower</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">upper</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                           <span class="n">fml</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.2f&quot;</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Ref.&quot;</span>
+                           <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Add prrety risk string column.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        res: Dataframe contaning points and confidence intervals.</span>
+<span class="sd">        risk: point estimates of risk column name.</span>
+<span class="sd">        lower: lower confidence interval column name.</span>
+<span class="sd">        upper: upper confidence interval column name.</span>
+<span class="sd">        fml: formula for f string.</span>
+<span class="sd">        ref: if point esitmate column is empty, insert this string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">risk_v</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">risk</span><span class="p">]</span>
+        <span class="n">lower_v</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">lower</span><span class="p">]</span>
+        <span class="n">upper_v</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">upper</span><span class="p">]</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">risk_v</span><span class="si">:{</span><span class="n">fml</span><span class="si">}}</span><span class="s2"> (</span><span class="si">{</span><span class="n">lower_v</span><span class="si">:{</span><span class="n">fml</span><span class="si">}}</span><span class="s2">, </span><span class="si">{</span><span class="n">upper_v</span><span class="si">:{</span><span class="n">fml</span><span class="si">}}</span><span class="s2">)&quot;</span>
+        <span class="k">return</span> <span class="n">s</span>
+
+    <span class="n">ser</span> <span class="o">=</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+           <span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="n">risk</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">(),</span> <span class="n">ref</span><span class="p">)</span>
+           <span class="p">)</span>
+    <span class="k">return</span> <span class="n">ser</span></div>
+
+
+<div class="viewcode-block" id="count_category_frequency"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.cleaning_utils.count_category_frequency">[docs]</a><span class="k">def</span> <span class="nf">count_category_frequency</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                             <span class="n">categorical_cols</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                             <span class="n">impute_continuous</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                             <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Count category frequency.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df: Original dataframe.</span>
+<span class="sd">        categorical_cols: Columns for categorical variables.</span>
+<span class="sd">        impute_continuous: columns not specified as categorical_cols were</span>
+<span class="sd">            imputed for item and number of observations (nobs).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">sers</span> <span class="o">=</span> <span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+             <span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+             <span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+             <span class="o">.</span><span class="n">stack</span><span class="p">()</span>
+             <span class="p">)</span>
+             <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">categorical_cols</span><span class="p">]</span>
+    <span class="n">ser_sum</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">sers</span><span class="p">)</span>
+    <span class="n">df_nobs</span> <span class="o">=</span> <span class="p">(</span><span class="n">ser_sum</span>
+               <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+               <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;level_0&quot;</span><span class="p">:</span> <span class="s2">&quot;item&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;level_1&quot;</span><span class="p">:</span> <span class="s2">&quot;category&quot;</span><span class="p">,</span>
+                                <span class="mi">0</span><span class="p">:</span><span class="s2">&quot;nobs&quot;</span><span class="p">}</span>
+                       <span class="p">)</span>
+               <span class="p">)</span>
+
+    <span class="n">df_nobs</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">df_nobs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">))</span>
+    <span class="n">df_nobs</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s2">&quot;item&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">df_nobs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;item&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">df_nobs</span></div>
+
+
+<div class="viewcode-block" id="sort_category_item"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.cleaning_utils.sort_category_item">[docs]</a><span class="k">def</span> <span class="nf">sort_category_item</span><span class="p">(</span><span class="n">df_</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                       <span class="n">order</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                       <span class="n">item_order</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                       <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Sort category and item based on categorical values.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df_ : dataframe containing category and item.</span>
+<span class="sd">        categorical: Dictionary containing column names and its order of items.</span>
+<span class="sd">        order : if specified, category is ordered based on this variable.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">item_order</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">item_order</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">df_sorted</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">order</span><span class="p">:</span>
+        <span class="n">cond</span> <span class="o">=</span> <span class="n">df_</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span>
+        <span class="n">dfM</span> <span class="o">=</span> <span class="n">df_</span><span class="p">[</span><span class="n">cond</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">item_order</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">lis</span> <span class="o">=</span> <span class="n">item_order</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+            <span class="n">sort_dic</span> <span class="o">=</span> <span class="p">{</span><span class="n">l</span><span class="p">:</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lis</span><span class="p">)}</span>
+            <span class="n">dfM</span> <span class="o">=</span> <span class="n">dfM</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;item&quot;</span><span class="p">,</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">sort_dic</span><span class="p">))</span>
+        <span class="n">df_sorted</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">df_sorted</span><span class="p">,</span> <span class="n">dfM</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df_sorted</span></div>
+
+
+<div class="viewcode-block" id="statsmodels_pretty_result_dataframe"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.cleaning_utils.statsmodels_pretty_result_dataframe">[docs]</a><span class="k">def</span> <span class="nf">statsmodels_pretty_result_dataframe</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">res</span><span class="p">,</span>
+    <span class="n">order</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">cont_cols</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">item_order</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fml</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.2f&quot;</span><span class="p">,</span>
+    <span class="n">accessor</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Obtain pretty result dataframe from statsmodels results.</span>
+<span class="sd">    Fitting coefficients are converted by np.exp.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: original dataframe.</span>
+<span class="sd">        res: statsmodels results.</span>
+<span class="sd">        categorical: Dictionary containing column names and its order of items.</span>
+<span class="sd">        order : if specified, category is ordered based on this variable.</span>
+<span class="sd">        fml: formula for f string of pretty risk.</span>
+<span class="sd">        accessor: Function to access each model result, which is summarized and displayed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">nobs</span> <span class="o">!=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">((</span><span class="s2">&quot;Some observations were dropped when fitted, &quot;</span>
+                         <span class="s2">&quot;check number of observations&quot;</span>
+                        <span class="p">))</span>
+    <span class="k">if</span> <span class="n">cont_cols</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cate_cols</span> <span class="o">=</span> <span class="n">order</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cate_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">order</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cont_cols</span><span class="p">]</span>
+    <span class="n">df_res</span> <span class="o">=</span> <span class="n">statsmodels_fitting_result_dataframe</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">accessor</span><span class="o">=</span><span class="n">accessor</span><span class="p">)</span>
+    <span class="n">df_nobs</span> <span class="o">=</span> <span class="n">count_category_frequency</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">cate_cols</span><span class="p">)</span>
+    <span class="n">df_sum</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_res</span><span class="p">,</span> <span class="n">df_nobs</span><span class="p">,</span>
+                      <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="s2">&quot;item&quot;</span><span class="p">],</span>
+                      <span class="n">validate</span><span class="o">=</span><span class="s2">&quot;1:1&quot;</span><span class="p">,</span>
+                      <span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span><span class="p">)</span>
+    <span class="n">df_sum</span> <span class="o">=</span> <span class="n">sort_category_item</span><span class="p">(</span><span class="n">df_sum</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">,</span> <span class="n">item_order</span><span class="o">=</span><span class="n">item_order</span><span class="p">)</span>
+    <span class="n">df_sum</span><span class="p">[</span><span class="s2">&quot;risk_pretty&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">add_pretty_risk_column</span><span class="p">(</span><span class="n">df_sum</span><span class="p">,</span>
+                                                   <span class="n">risk</span><span class="o">=</span><span class="s2">&quot;risk&quot;</span><span class="p">,</span>
+                                                   <span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                                   <span class="n">upper</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                                   <span class="n">fml</span><span class="o">=</span><span class="s2">&quot;.2f&quot;</span>
+                                                   <span class="p">)</span>
+    <span class="k">return</span> <span class="n">df_sum</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Toshiaki Asakura.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
