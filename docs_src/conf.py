@@ -22,6 +22,7 @@ extensions = [
     "sphinx_autodoc_typehints",
     "nbsphinx",
     "sphinx.ext.mathjax",
+    "sphinx_sitemap",
 ]
 
 templates_path = ['_templates']
@@ -43,3 +44,5 @@ html_context = {
   'github_version': 'main/docs_src/',
 }
 
+html_baseurl = "https://toshiakiasakura.github.io/myforestplot/" # for sphinx-sitemap.
+html_static_path = ['_static']
