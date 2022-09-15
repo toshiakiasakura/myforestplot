@@ -288,6 +288,7 @@ class ForestPlot():
                           df: Optional[pd.DataFrame] = None,
                           log_scale: bool = False,
                           kwds: dict = None,
+                          scale: float = 0
                           ):
         ax = self.axd[index]
         if kwds is None:
@@ -300,7 +301,6 @@ class ForestPlot():
 
         xmin, xmax = ax.get_xlim()
         diff = xmax - xmin
-        scale = 0.008
         ser_lower = (df[lower]
                      .mask(df[lower] > xmin, np.nan)
                      .mask(df[lower] <= xmin, xmin + diff*scale)
