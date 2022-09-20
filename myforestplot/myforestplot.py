@@ -336,6 +336,23 @@ class ForestPlot():
         ax.scatter(ser_upper, y_index, zorder=5, 
                    marker=upper_marker, **kwds)
 
+    def ax_method_to_figs(self, 
+                          method: str, 
+                          *args, **kwds):
+        """Apply axis method to all the figure fields.
+
+        Args:
+            method: Name of axis method.
+            fig_ax_index: If not specified, apply to all figs.
+                If specified, apply to specified index axis fields.
+            *args: Passed to a specified method.
+            **kwds: Passed to a specified method.
+        """
+        for ind in self.fig_ax_index:
+            ax = self.axd[ind]
+            f = getattr(ax, method)
+            f(*args, **kwds)
+
 
 @dataclass(repr=True)
 class SimpleForestPlot(ForestPlot):
