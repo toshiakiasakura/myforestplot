@@ -75,15 +75,15 @@ def errorbar_forestplot(
     y_index = y_index + y_adj
 
     df = df.copy()
-    if errorbar_kwds is None:
-        errorbar_kwds = dict(fmt="o",
+    def_errorbar_kwds = dict(fmt="o",
                              capsize=5,
                              markeredgecolor="black",
                              ecolor="black",
                              color='white'
                              )
-    if ref_kwds is None:
-        ref_kwds = dict(marker="s", s=20, color="black")
+    errorbar_kwds = set_default_keywords(errorbar_kwds, def_errorbar_kwds)
+    def_ref_kwds = dict(marker="s", s=20, color="black")
+    ref_kwds = set_default_keywords(ref_kwds, def_ref_kwds)
 
     if log_scale:
         df[risk] = np.log(df[risk])
@@ -141,3 +141,12 @@ def embed_strings_forestplot(
         ax.text(x, y, text, ha="left", va="center",
                 fontsize=fontsize, **text_kwds)
 
+
+def set_default_keywords(kwds : Optional[dict], def_kwds: dict) -> dict:
+    """Set default keywords arguments.
+    """
+    if kwds is None:
+        kwds = {}
+    for k, v in def_kwds.items():
+        kwds[k] = kwds.get(k, v)
+    return kwds

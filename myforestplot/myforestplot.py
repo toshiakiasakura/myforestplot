@@ -255,12 +255,16 @@ class ForestPlot():
     def draw_horizontal_line(self,
                              y: float,
                              scale: float = 0.1,
-                             kwds: dict = None
+                             **kwds,
                              ):
         """Draw horizontal line.
+
+        Args:
+            kwds: Passed to ax.axhline.
         """
-        if kwds is None:
-            kwds = dict(lw=1, ls="-", color="black")
+        def_kwds = dict(lw=1, ls="-", color="black")
+        kwds = vis_utils.set_default_keywords(kwds, def_kwds)
+
         for i,ax in self.axd.items():
             xmin = 0
             xmax = 1
@@ -271,7 +275,7 @@ class ForestPlot():
                        zorder=-10, clip_on=False, **kwds)
 
     def horizontal_variable_separators(self, scale: float = 0.1,
-                                       kwds: dict = None):
+                                       **kwds):
         """Draw horizontal lines for seprating variables.
 
         Args:
@@ -280,7 +284,7 @@ class ForestPlot():
         hlines = self.y_index_cate.copy() + 0.5
 
         for y in hlines:
-            self.draw_horizontal_line(y=y, scale=scale, kwds=kwds)
+            self.draw_horizontal_line(y=y, scale=scale, **kwds)
 
     def draw_outer_marker(self, 
                           index: int,
@@ -290,12 +294,21 @@ class ForestPlot():
                           upper_marker=5,
                           df: Optional[pd.DataFrame] = None,
                           log_scale: bool = False,
-                          kwds: dict = None,
-                          scale: float = 0
+                          scale: float = 0,
+                          **kwds,
                           ):
+        """Draw markers to indicate outer range of confidence intervals.
+
+        Args:
+            scale: Control position of markers. 
+                scale * x range is slided towards inside. 
+            kwds: Passed to ax.scatter.
+        """
         ax = self.axd[index]
-        if kwds is None:
-            kwds = dict(s=20, color="black")
+
+        def_kwds = dict(s=20, color="black")
+        kwds = vis_utils.set_default_keywords(kwds, def_kwds)
+
         if df is None:
             df = self.df
         if log_scale:
