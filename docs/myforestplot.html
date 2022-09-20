@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>myforestplot package &mdash; myforestplot 0.2.1 documentation</title>
+  <title>myforestplot package &mdash; myforestplot 0.2.2 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="canonical" href="https://toshiakiasakura.github.io/myforestplot/myforestplot.html" />
@@ -55,7 +55,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Gallery:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/2_gallery.html">SingleForestPlot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/2_gallery.html">SimpleForestPlot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/2_gallery.html#ForestPlot">ForestPlot</a></li>
 </ul>
 
@@ -229,12 +229,30 @@ Fitting coefficients are converted by np.exp.</p>
 self.axd contains axes of which index starts from 1.</p></li>
 <li><p><strong>fig_ax_index</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]) – If specified, x ticks and x labels are left.</p></li>
 <li><p><strong>figsize</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]) – Figure size.</p></li>
-<li><p><strong>hide_spines</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Hide outlines of axes.  Takes “right”,”top”,”bottom”,”left” or these list.</p></li>
+<li><p><strong>hide_spines</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Hide outlines of axes.
+Takes “right”,”top”,”bottom”,”left” or these list.</p></li>
 <li><p><strong>vertical_align</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Align categorical names above items. It requires dataframe to have
 “category” and “item” column names.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="myforestplot.myforestplot.ForestPlot.ax_method_to_figs">
+<span class="sig-name descname"><span class="pre">ax_method_to_figs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/myforestplot.html#ForestPlot.ax_method_to_figs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.myforestplot.ForestPlot.ax_method_to_figs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply axis method to all the figure fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Name of axis method.</p></li>
+<li><p><strong>fig_ax_index</strong> – If not specified, apply to all figs.
+If specified, apply to specified index axis fields.</p></li>
+<li><p><strong>*args</strong> – Passed to a specified method.</p></li>
+<li><p><strong>**kwds</strong> – Passed to a specified method.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="myforestplot.myforestplot.ForestPlot.create_y_index">
 <span class="sig-name descname"><span class="pre">create_y_index</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/myforestplot.html#ForestPlot.create_y_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.myforestplot.ForestPlot.create_y_index" title="Permalink to this definition">¶</a></dt>
@@ -252,14 +270,30 @@ self.axd contains axes of which index starts from 1.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="myforestplot.myforestplot.ForestPlot.draw_horizontal_line">
-<span class="sig-name descname"><span class="pre">draw_horizontal_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/myforestplot.html#ForestPlot.draw_horizontal_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.myforestplot.ForestPlot.draw_horizontal_line" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">draw_horizontal_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/myforestplot.html#ForestPlot.draw_horizontal_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.myforestplot.ForestPlot.draw_horizontal_line" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw horizontal line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kwds</strong> – Passed to ax.axhline.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="myforestplot.myforestplot.ForestPlot.draw_outer_marker">
-<span class="sig-name descname"><span class="pre">draw_outer_marker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/myforestplot.html#ForestPlot.draw_outer_marker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.myforestplot.ForestPlot.draw_outer_marker" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">draw_outer_marker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_marker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_adj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/myforestplot.html#ForestPlot.draw_outer_marker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.myforestplot.ForestPlot.draw_outer_marker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw markers to indicate outer range of confidence intervals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_adj</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – For this value, points are moved vertically.</p></li>
+<li><p><strong>scale</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Control position of markers.
+scale * x range is slided towards inside.</p></li>
+<li><p><strong>kwds</strong> – Passed to ax.scatter.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="myforestplot.myforestplot.ForestPlot.embed_cate_strings">
@@ -293,7 +327,7 @@ The position of strings become different only if self.vertical_align == True.</p
 <li><p><strong>risk</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Column name for risk.</p></li>
 <li><p><strong>lower</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Column name for lower confidence interval.</p></li>
 <li><p><strong>upper</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Column name for upper confidence interval.</p></li>
-<li><p><strong>y_adj</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – For this value, plotting is moved.</p></li>
+<li><p><strong>y_adj</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – For this value, points are moved vertically.</p></li>
 <li><p><strong>errorbar_kwds</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]) – Passed to ax.errorbar function.</p></li>
 <li><p><strong>ref_kwds</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]) – Passed to ax.scatter function.</p></li>
 <li><p><strong>df</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]) – Dataframe for another result.</p></li>
@@ -323,6 +357,25 @@ changed to this value.</p></li>
 <span class="sig-name descname"><span class="pre">figure_layout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/myforestplot.html#ForestPlot.figure_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.myforestplot.ForestPlot.figure_layout" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="myforestplot.myforestplot.ForestPlot.h_multi_errorbar">
+<span class="sig-name descname"><span class="pre">h_multi_errorbar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_adj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_kwds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/myforestplot.html#ForestPlot.h_multi_errorbar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.myforestplot.ForestPlot.h_multi_errorbar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Horizontal multiple errorbar plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe to be stratified.</p></li>
+<li><p><strong>by</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Dataframe is stratified by this column.</p></li>
+<li><p><strong>order</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – If specified, column items are plotted by this order.</p></li>
+<li><p><strong>y_adj</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – For this value, points are moved vertically.</p></li>
+<li><p><strong>multi_kwds</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>]]) – Options changed over each plotting are
+specified by this parameter.</p></li>
+<li><p><strong>kwds</strong> – Passsed to ForestPlot.errorbar.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="myforestplot.myforestplot.ForestPlot.hide_spines">
 <span class="sig-name descname"><span class="pre">hide_spines</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#myforestplot.myforestplot.ForestPlot.hide_spines" title="Permalink to this definition">¶</a></dt>
@@ -330,11 +383,11 @@ changed to this value.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="myforestplot.myforestplot.ForestPlot.horizontal_variable_separators">
-<span class="sig-name descname"><span class="pre">horizontal_variable_separators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/myforestplot.html#ForestPlot.horizontal_variable_separators"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.myforestplot.ForestPlot.horizontal_variable_separators" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">horizontal_variable_separators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/myforestplot.html#ForestPlot.horizontal_variable_separators"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.myforestplot.ForestPlot.horizontal_variable_separators" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw horizontal lines for seprating variables.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>kwds</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]) – Passed to ax.axhline function.</p>
+<dd class="field-odd"><p><strong>kwds</strong> – Passed to ax.axhline function.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -348,6 +401,26 @@ changed to this value.</p></li>
 <dt class="sig sig-object py" id="myforestplot.myforestplot.ForestPlot.text_axis_off">
 <span class="sig-name descname"><span class="pre">text_axis_off</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#myforestplot.myforestplot.ForestPlot.text_axis_off" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="myforestplot.myforestplot.ForestPlot.v_multi_errorbar">
+<span class="sig-name descname"><span class="pre">v_multi_errorbar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_kwds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/myforestplot.html#ForestPlot.v_multi_errorbar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.myforestplot.ForestPlot.v_multi_errorbar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verticle multiple errorbar plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – To draw points to this fig_ax_index field.</p></li>
+<li><p><strong>df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe to be stratified.</p></li>
+<li><p><strong>by</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Dataframe is stratified by this column.</p></li>
+<li><p><strong>order</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – If specified, column items are plotted by this order.</p></li>
+<li><p><strong>scale</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – [-scale, scale] is set to be a range of y_adj.</p></li>
+<li><p><strong>multi_kwds</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>]]) – Options changed over each plotting are
+specified by this parameter.</p></li>
+<li><p><strong>kwds</strong> – Passsed to ForestPlot.errorbar.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="myforestplot.myforestplot.ForestPlot.vertical_align">
@@ -385,7 +458,18 @@ text field and one axis field.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="myforestplot.myforestplot.SimpleForestPlot.draw_outer_marker">
 <span class="sig-name descname"><span class="pre">draw_outer_marker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/myforestplot.html#SimpleForestPlot.draw_outer_marker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.myforestplot.SimpleForestPlot.draw_outer_marker" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Draw markers to indicate outer range of confidence intervals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_adj</strong> – For this value, points are moved vertically.</p></li>
+<li><p><strong>scale</strong> – Control position of markers.
+scale * x range is slided towards inside.</p></li>
+<li><p><strong>kwds</strong> – Passed to ax.scatter.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="myforestplot.myforestplot.SimpleForestPlot.embed_cate_strings">
@@ -419,7 +503,7 @@ The position of strings become different only if self.vertical_align == True.</p
 <li><p><strong>risk</strong> – Column name for risk.</p></li>
 <li><p><strong>lower</strong> – Column name for lower confidence interval.</p></li>
 <li><p><strong>upper</strong> – Column name for upper confidence interval.</p></li>
-<li><p><strong>y_adj</strong> – For this value, plotting is moved.</p></li>
+<li><p><strong>y_adj</strong> – For this value, points are moved vertically.</p></li>
 <li><p><strong>errorbar_kwds</strong> – Passed to ax.errorbar function.</p></li>
 <li><p><strong>ref_kwds</strong> – Passed to ax.scatter function.</p></li>
 <li><p><strong>df</strong> – Dataframe for another result.</p></li>
@@ -438,6 +522,26 @@ changed to this value.</p></li>
 <dt class="sig sig-object py" id="myforestplot.myforestplot.SimpleForestPlot.hide_spines">
 <span class="sig-name descname"><span class="pre">hide_spines</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#myforestplot.myforestplot.SimpleForestPlot.hide_spines" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="myforestplot.myforestplot.SimpleForestPlot.v_multi_errorbar">
+<span class="sig-name descname"><span class="pre">v_multi_errorbar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/myforestplot.html#SimpleForestPlot.v_multi_errorbar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.myforestplot.SimpleForestPlot.v_multi_errorbar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verticle multiple errorbar plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> – To draw points to this fig_ax_index field.</p></li>
+<li><p><strong>df</strong> – Dataframe to be stratified.</p></li>
+<li><p><strong>by</strong> – Dataframe is stratified by this column.</p></li>
+<li><p><strong>order</strong> – If specified, column items are plotted by this order.</p></li>
+<li><p><strong>scale</strong> – [-scale, scale] is set to be a range of y_adj.</p></li>
+<li><p><strong>multi_kwds</strong> – Options changed over each plotting are
+specified by this parameter.</p></li>
+<li><p><strong>kwds</strong> – Passsed to ForestPlot.errorbar.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -485,9 +589,10 @@ changed to this value.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="myforestplot.vis_utils.obtain_indexes_from_category_item">
 <span class="sig-prename descclassname"><span class="pre">myforestplot.vis_utils.</span></span><span class="sig-name descname"><span class="pre">obtain_indexes_from_category_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ser_cate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ser_item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/vis_utils.html#obtain_indexes_from_category_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.vis_utils.obtain_indexes_from_category_item" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create index for category and item from series of category and item
-for vertically aligned labels and errorbar plot.
-It is noted that index has negative continuous values, starting from 0 to -n.</p>
+<dd><p>Create index for category and item from series of
+category and item for vertically aligned labels and errorbar plot.
+It is noted that index has negative continuous values,
+starting from 0 to -n.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -500,6 +605,17 @@ It is noted that index has negative continuous values, starting from 0 to -n.</p
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Indexes for caategories and items.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="myforestplot.vis_utils.set_default_keywords">
+<span class="sig-prename descclassname"><span class="pre">myforestplot.vis_utils.</span></span><span class="sig-name descname"><span class="pre">set_default_keywords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kwds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/myforestplot/vis_utils.html#set_default_keywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#myforestplot.vis_utils.set_default_keywords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set default keywords arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
 </dd>
 </dl>
 </dd></dl>

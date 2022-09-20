@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>myforestplot.myforestplot &mdash; myforestplot 0.2.1 documentation</title>
+  <title>myforestplot.myforestplot &mdash; myforestplot 0.2.2 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="canonical" href="https://toshiakiasakura.github.io/myforestplot/_modules/myforestplot/myforestplot.html" />
@@ -19,7 +19,17 @@
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZF7MFCTQG3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3S0FLX78GH');
+</script>
+
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,7 +54,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Gallery:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/2_gallery.html">SingleForestPlot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/2_gallery.html">SimpleForestPlot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/2_gallery.html#ForestPlot">ForestPlot</a></li>
 </ul>
 
@@ -75,6 +85,8 @@
   <h1>Source code for myforestplot.myforestplot</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -94,7 +106,8 @@
 <span class="sd">            self.axd contains axes of which index starts from 1. </span>
 <span class="sd">        fig_ax_index: If specified, x ticks and x labels are left.</span>
 <span class="sd">        figsize: Figure size.</span>
-<span class="sd">        hide_spines : Hide outlines of axes.  Takes &quot;right&quot;,&quot;top&quot;,&quot;bottom&quot;,&quot;left&quot; or these list.</span>
+<span class="sd">        hide_spines : Hide outlines of axes.  </span>
+<span class="sd">            Takes &quot;right&quot;,&quot;top&quot;,&quot;bottom&quot;,&quot;left&quot; or these list.</span>
 <span class="sd">        vertical_align: Align categorical names above items. It requires dataframe to have </span>
 <span class="sd">            &quot;category&quot; and &quot;item&quot; column names.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -179,12 +192,14 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># For text field.</span>
                 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-                <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> 
+                           <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_axis_off</span><span class="p">:</span>
                     <span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
 
             <span class="c1"># For horizontal line separator, specify ax field at first.</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span></div>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> 
+                       <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">100</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ForestPlot.errorbar"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.ForestPlot.errorbar">[docs]</a>    <span class="k">def</span> <span class="nf">errorbar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                  <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -207,7 +222,7 @@
 <span class="sd">            risk: Column name for risk.</span>
 <span class="sd">            lower: Column name for lower confidence interval.</span>
 <span class="sd">            upper: Column name for upper confidence interval.</span>
-<span class="sd">            y_adj: For this value, plotting is moved. </span>
+<span class="sd">            y_adj: For this value, points are moved vertically. </span>
 <span class="sd">            errorbar_kwds: Passed to ax.errorbar function.</span>
 <span class="sd">            ref_kwds: Passed to ax.scatter function.</span>
 <span class="sd">            df: Dataframe for another result.</span>
@@ -221,11 +236,6 @@
         <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axd</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span>
-        <span class="k">if</span> <span class="n">errorbar_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">errorbar_kwds</span><span class="p">[</span><span class="s2">&quot;ecolor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">errorbar_color</span>
-            <span class="n">errorbar_kwds</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">errorbar_color</span>
-        <span class="k">if</span> <span class="n">ref_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">ref_kwds</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref_color</span>
 
         <span class="n">vis_utils</span><span class="o">.</span><span class="n">errorbar_forestplot</span><span class="p">(</span>
             <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> 
@@ -242,6 +252,97 @@
             <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
             <span class="n">log_scale</span><span class="o">=</span><span class="n">log_scale</span><span class="p">,</span>
         <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_prepare_multi_errorbar_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">multi_kwds</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">order</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">order</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">by</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Number of stratified items should be more than one&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">multi_kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">multi_kwds</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">return</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">multi_kwds</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="ForestPlot.v_multi_errorbar"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.ForestPlot.v_multi_errorbar">[docs]</a>    <span class="k">def</span> <span class="nf">v_multi_errorbar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                         <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+                         <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                         <span class="n">by</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+                         <span class="n">order</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                         <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span>
+                         <span class="n">multi_kwds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                         <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Verticle multiple errorbar plots. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            index: To draw points to this fig_ax_index field.</span>
+<span class="sd">            df: Dataframe to be stratified.</span>
+<span class="sd">            by: Dataframe is stratified by this column.</span>
+<span class="sd">            order: If specified, column items are plotted by this order.</span>
+<span class="sd">            scale: [-scale, scale] is set to be a range of y_adj.</span>
+<span class="sd">            multi_kwds: Options changed over each plotting are </span>
+<span class="sd">                specified by this parameter.</span>
+<span class="sd">            kwds: Passsed to ForestPlot.errorbar.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">order</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">multi_kwds</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_multi_errorbar_args</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">multi_kwds</span><span class="p">)</span>
+
+        <span class="n">y_adjs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+        <span class="n">y_adjs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_adjs</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">scale</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">order</span><span class="p">):</span>
+            <span class="n">dfM</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">by</span><span class="p">]</span> <span class="o">==</span> <span class="n">item</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">multi_kwds</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">kwds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">y_adj</span> <span class="o">=</span> <span class="n">y_adjs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axd</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="n">vis_utils</span><span class="o">.</span><span class="n">errorbar_forestplot</span><span class="p">(</span>
+                <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> 
+                <span class="n">y_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">y_index</span><span class="p">,</span>
+                <span class="n">df</span><span class="o">=</span><span class="n">dfM</span><span class="p">,</span>
+                <span class="n">y_adj</span><span class="o">=</span><span class="n">y_adj</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwds</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ForestPlot.h_multi_errorbar"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.ForestPlot.h_multi_errorbar">[docs]</a>    <span class="k">def</span> <span class="nf">h_multi_errorbar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                         <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                         <span class="n">by</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                         <span class="n">order</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                         <span class="n">y_adj</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+                         <span class="n">multi_kwds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                         <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Horizontal multiple errorbar plots. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df: Dataframe to be stratified.</span>
+<span class="sd">            by: Dataframe is stratified by this column.</span>
+<span class="sd">            order: If specified, column items are plotted by this order.</span>
+<span class="sd">            y_adj: For this value, points are moved vertically. </span>
+<span class="sd">            multi_kwds: Options changed over each plotting are </span>
+<span class="sd">                specified by this parameter.</span>
+<span class="sd">            kwds: Passsed to ForestPlot.errorbar.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">order</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">multi_kwds</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_multi_errorbar_args</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">multi_kwds</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">order</span><span class="p">):</span>
+            <span class="n">dfM</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">by</span><span class="p">]</span> <span class="o">==</span> <span class="n">item</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">multi_kwds</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">kwds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="n">ax_ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig_ax_index</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axd</span><span class="p">[</span><span class="n">ax_ind</span><span class="p">]</span>
+            <span class="n">vis_utils</span><span class="o">.</span><span class="n">errorbar_forestplot</span><span class="p">(</span>
+                <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> 
+                <span class="n">y_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">y_index</span><span class="p">,</span>
+                <span class="n">df</span><span class="o">=</span><span class="n">dfM</span><span class="p">,</span>
+                <span class="n">y_adj</span><span class="o">=</span><span class="n">y_adj</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwds</span><span class="p">,</span>
+            <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ForestPlot.embed_strings"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.ForestPlot.embed_strings">[docs]</a>    <span class="k">def</span> <span class="nf">embed_strings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                       <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -327,12 +428,16 @@
 <div class="viewcode-block" id="ForestPlot.draw_horizontal_line"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.ForestPlot.draw_horizontal_line">[docs]</a>    <span class="k">def</span> <span class="nf">draw_horizontal_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                              <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                              <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
-                             <span class="n">kwds</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span>
+                             <span class="o">**</span><span class="n">kwds</span><span class="p">,</span>
                              <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Draw horizontal line.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            kwds: Passed to ax.axhline.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+        <span class="n">def_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+        <span class="n">kwds</span> <span class="o">=</span> <span class="n">vis_utils</span><span class="o">.</span><span class="n">set_default_keywords</span><span class="p">(</span><span class="n">kwds</span><span class="p">,</span> <span class="n">def_kwds</span><span class="p">)</span>
+
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">ax</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">axd</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">xmin</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">xmax</span> <span class="o">=</span> <span class="mi">1</span>
@@ -343,7 +448,7 @@
                        <span class="n">zorder</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span> <span class="n">clip_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ForestPlot.horizontal_variable_separators"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.ForestPlot.horizontal_variable_separators">[docs]</a>    <span class="k">def</span> <span class="nf">horizontal_variable_separators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
-                                       <span class="n">kwds</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+                                       <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Draw horizontal lines for seprating variables.</span>
 
 <span class="sd">        Args:</span>
@@ -352,7 +457,7 @@
         <span class="n">hlines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_index_cate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span>
 
         <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">hlines</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">draw_horizontal_line</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span> <span class="n">kwds</span><span class="o">=</span><span class="n">kwds</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_horizontal_line</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ForestPlot.draw_outer_marker"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.ForestPlot.draw_outer_marker">[docs]</a>    <span class="k">def</span> <span class="nf">draw_outer_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                           <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -360,16 +465,28 @@
                           <span class="n">upper</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
                           <span class="n">lower_marker</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
                           <span class="n">upper_marker</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                          <span class="n">y_adj</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
                           <span class="n">df</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                           <span class="n">log_scale</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                          <span class="n">kwds</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                          <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
+                          <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                          <span class="o">**</span><span class="n">kwds</span><span class="p">,</span>
                           <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Draw markers to indicate outer range of confidence intervals.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            y_adj: For this value, points are moved vertically. </span>
+<span class="sd">            scale: Control position of markers. </span>
+<span class="sd">                scale * x range is slided towards inside. </span>
+<span class="sd">            kwds: Passed to ax.scatter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axd</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+
+        <span class="n">def_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+        <span class="n">kwds</span> <span class="o">=</span> <span class="n">vis_utils</span><span class="o">.</span><span class="n">set_default_keywords</span><span class="p">(</span><span class="n">kwds</span><span class="p">,</span> <span class="n">def_kwds</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">log_scale</span><span class="p">:</span>
             <span class="n">df</span><span class="p">[</span><span class="n">lower</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">lower</span><span class="p">])</span>
             <span class="n">df</span><span class="p">[</span><span class="n">upper</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">upper</span><span class="p">])</span>
@@ -386,10 +503,28 @@
                      <span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">upper</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">-</span> <span class="n">diff</span><span class="o">*</span><span class="n">scale</span><span class="p">)</span>
                      <span class="p">)</span>
 
-        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">ser_lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_index</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
+        <span class="n">y_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_index</span> <span class="o">+</span> <span class="n">y_adj</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">ser_lower</span><span class="p">,</span> <span class="n">y_index</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
                    <span class="n">marker</span><span class="o">=</span><span class="n">lower_marker</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">ser_upper</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_index</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
-                   <span class="n">marker</span><span class="o">=</span><span class="n">upper_marker</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></div></div>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">ser_upper</span><span class="p">,</span> <span class="n">y_index</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
+                   <span class="n">marker</span><span class="o">=</span><span class="n">upper_marker</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ForestPlot.ax_method_to_figs"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.ForestPlot.ax_method_to_figs">[docs]</a>    <span class="k">def</span> <span class="nf">ax_method_to_figs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                          <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+                          <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply axis method to all the figure fields.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            method: Name of axis method.</span>
+<span class="sd">            fig_ax_index: If not specified, apply to all figs.</span>
+<span class="sd">                If specified, apply to specified index axis fields.</span>
+<span class="sd">            *args: Passed to a specified method.</span>
+<span class="sd">            **kwds: Passed to a specified method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig_ax_index</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axd</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+            <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="SimpleForestPlot"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.SimpleForestPlot">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="nb">repr</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -420,8 +555,11 @@
 
 <div class="viewcode-block" id="SimpleForestPlot.draw_outer_marker"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.SimpleForestPlot.draw_outer_marker">[docs]</a>    <span class="k">def</span> <span class="nf">draw_outer_marker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
         <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,)</span> <span class="o">+</span> <span class="n">args</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">draw_outer_marker</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></div></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">draw_outer_marker</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="SimpleForestPlot.v_multi_errorbar"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.SimpleForestPlot.v_multi_errorbar">[docs]</a>    <span class="k">def</span> <span class="nf">v_multi_errorbar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,)</span> <span class="o">+</span> <span class="n">args</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">v_multi_errorbar</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></div></div>
 
 
 
