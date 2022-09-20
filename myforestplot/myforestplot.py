@@ -19,7 +19,8 @@ class ForestPlot():
             self.axd contains axes of which index starts from 1. 
         fig_ax_index: If specified, x ticks and x labels are left.
         figsize: Figure size.
-        hide_spines : Hide outlines of axes.  Takes "right","top","bottom","left" or these list.
+        hide_spines : Hide outlines of axes.  
+            Takes "right","top","bottom","left" or these list.
         vertical_align: Align categorical names above items. It requires dataframe to have 
             "category" and "item" column names.
     """
@@ -104,12 +105,14 @@ class ForestPlot():
             else:
                 # For text field.
                 ax.set_xlim([0,1])
-                ax.scatter([0, 0, 1, 1], [self.ymin, 0, self.ymin, 0], color="white")
+                ax.scatter([0, 0, 1, 1], [self.ymin, 0, self.ymin, 0], 
+                           color="white")
                 if self.text_axis_off:
                     ax.set_axis_off()
 
             # For horizontal line separator, specify ax field at first.
-            ax.scatter([0, 0, 1, 1], [self.ymin, 0, self.ymin, 0], color="white")
+            ax.scatter([0, 0, 1, 1], [self.ymin, 0, self.ymin, 0], 
+                       color="white", zorder=-100)
 
     def errorbar(self, 
                  index: int,
