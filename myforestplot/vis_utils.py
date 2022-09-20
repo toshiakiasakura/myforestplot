@@ -8,9 +8,10 @@ from matplotlib.gridspec import GridSpec
 def obtain_indexes_from_category_item(ser_cate : pd.Series,
                                       ser_item : pd.Series
                                       ) -> Tuple[np.array, np.array]:
-    """Create index for category and item from series of category and item
-    for vertically aligned labels and errorbar plot.
-    It is noted that index has negative continuous values, starting from 0 to -n.
+    """Create index for category and item from series of 
+    category and item for vertically aligned labels and errorbar plot.
+    It is noted that index has negative continuous values, 
+    starting from 0 to -n.
 
     Args:
         ser_cate: Series of categories matched with ser_item.
@@ -71,18 +72,24 @@ def errorbar_forestplot(
         label: Label for stratified drawings. Passed to ax.errorbar.
         log_scale: Plot risk in log scale (np.log).
     """
+    if errorbar_color is not None:
+        errorbar_kwds["ecolor"] = errorbar_color
+        errorbar_kwds["color"] = errorbar_color
+    if ref_color is not None:
+        ref_kwds["color"] = ref_color
+
     y_index = y_index + y_adj
 
     df = df.copy()
-    if errorbar_kwds is None:
-        errorbar_kwds = dict(fmt="o",
+    def_errorbar_kwds = dict(fmt="o",
                              capsize=5,
                              markeredgecolor="black",
                              ecolor="black",
                              color='white'
                              )
-    if ref_kwds is None:
-        ref_kwds = dict(marker="s", s=20, color="black")
+    errorbar_kwds = set_default_keywords(errorbar_kwds, def_errorbar_kwds)
+    def_ref_kwds = dict(marker="s", s=20, color="black")
+    ref_kwds = set_default_keywords(ref_kwds, def_ref_kwds)
 
     if log_scale:
         df[risk] = np.log(df[risk])
@@ -97,13 +104,14 @@ def errorbar_forestplot(
                 y_index[cond],
                 xerr=df.loc[cond, ["xerr_lower", "xerr_upper"]].T,
                 label=label,
+                zorder=5,
                 **errorbar_kwds
                 )
 
     cond = df[risk].isnull()
     ref_v = 0 if log_scale else 1
     df["ref"] = df[risk].mask(cond, ref_v).mask(~cond, np.nan)
-    ax.scatter(df["ref"], y_index, **ref_kwds)
+    ax.scatter(df["ref"], y_index, zorder=5, **ref_kwds)
 
 
 def embed_strings_forestplot(
@@ -139,3 +147,12 @@ def embed_strings_forestplot(
         ax.text(x, y, text, ha="left", va="center",
                 fontsize=fontsize, **text_kwds)
 
+
+def set_default_keywords(kwds : Optional[dict], def_kwds: dict) -> dict:
+    """Set default keywords arguments.
+    """
+    if kwds is None:
+        kwds = {}
+    for k, v in def_kwds.items():
+        kwds[k] = kwds.get(k, v)
+    return kwds

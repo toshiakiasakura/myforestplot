@@ -13,7 +13,7 @@
    "id": "8c17cdef-b150-4a3c-8137-9191b5bf6874",
    "metadata": {},
    "source": [
-    "## Clearning tools \n",
+    "## Cleaning tools \n",
     "MyForestplot prepares cleaning tools for preparing dataframe used for forestplot. These tools are mainly designed to use results of statsmodels results. "
    ]
   },
@@ -913,7 +913,7 @@
    "id": "b0bcdaa7-2d6f-4bfb-8bfe-3f038dcaf962",
    "metadata": {},
    "source": [
-    "## SinmpleForestPlot \n",
+    "## SimpleForestPlot \n",
     "The following is an illustration of how myforestplot works.  "
    ]
   },

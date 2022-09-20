@@ -1,5 +1,7 @@
 from typing import Union, Optional, List, Dict, Tuple, Any
 from dataclasses import dataclass, field
+import copy
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -19,7 +21,8 @@ class ForestPlot():
             self.axd contains axes of which index starts from 1. 
         fig_ax_index: If specified, x ticks and x labels are left.
         figsize: Figure size.
-        hide_spines : Hide outlines of axes.  Takes "right","top","bottom","left" or these list.
+        hide_spines : Hide outlines of axes.  
+            Takes "right","top","bottom","left" or these list.
         vertical_align: Align categorical names above items. It requires dataframe to have 
             "category" and "item" column names.
     """
@@ -104,12 +107,14 @@ class ForestPlot():
             else:
                 # For text field.
                 ax.set_xlim([0,1])
-                ax.scatter([0, 0, 1, 1], [self.ymin, 0, self.ymin, 0], color="white")
+                ax.scatter([0, 0, 1, 1], [self.ymin, 0, self.ymin, 0], 
+                           color="white")
                 if self.text_axis_off:
                     ax.set_axis_off()
 
             # For horizontal line separator, specify ax field at first.
-            ax.scatter([0, 0, 1, 1], [self.ymin, 0, self.ymin, 0], color="white")
+            ax.scatter([0, 0, 1, 1], [self.ymin, 0, self.ymin, 0], 
+                       color="white", zorder=-100)
 
     def errorbar(self, 
                  index: int,
@@ -132,7 +137,7 @@ class ForestPlot():
             risk: Column name for risk.
             lower: Column name for lower confidence interval.
             upper: Column name for upper confidence interval.
-            y_adj: For this value, plotting is moved. 
+            y_adj: For this value, points are moved vertically. 
             errorbar_kwds: Passed to ax.errorbar function.
             ref_kwds: Passed to ax.scatter function.
             df: Dataframe for another result.
@@ -146,11 +151,6 @@ class ForestPlot():
         ax = self.axd[index]
         if df is None:
             df = self.df
-        if errorbar_color is not None:
-            errorbar_kwds["ecolor"] = errorbar_color
-            errorbar_kwds["color"] = errorbar_color
-        if ref_color is not None:
-            ref_kwds["color"] = ref_color
 
         vis_utils.errorbar_forestplot(
             ax=ax, 
@@ -167,6 +167,97 @@ class ForestPlot():
             label=label,
             log_scale=log_scale,
         )
+
+    def _prepare_multi_errorbar_args(self, df, by, order, multi_kwds):
+        if order is None:
+            order = df[by].unique()
+        n = len(order)
+        if n == 1:
+            raise Exception("Number of stratified items should be more than one")
+
+        if multi_kwds is None:
+            multi_kwds = {}
+
+        return(order, n, multi_kwds)
+    
+    def v_multi_errorbar(self, 
+                         index: int, 
+                         df: pd.DataFrame,
+                         by: str, 
+                         order: Optional[List[str]] = None,
+                         scale: float = 0.4,
+                         multi_kwds: Optional[Dict[str, list]] = None,
+                         **kwds):
+        """Verticle multiple errorbar plots. 
+
+        Args:
+            index: To draw points to this fig_ax_index field.
+            df: Dataframe to be stratified.
+            by: Dataframe is stratified by this column.
+            order: If specified, column items are plotted by this order.
+            scale: [-scale, scale] is set to be a range of y_adj.
+            multi_kwds: Options changed over each plotting are 
+                specified by this parameter.
+            kwds: Passsed to ForestPlot.errorbar.
+        """
+        order, n, multi_kwds = \
+            self._prepare_multi_errorbar_args(df, by, order, multi_kwds)
+
+        y_adjs = [0.5 - 1/(n - 1)*i for i in range(n)]
+        y_adjs = np.array(y_adjs)*2*scale
+
+        for i, item in enumerate(order):
+            dfM = df[df[by] == item]
+
+            for k, v in multi_kwds.items():
+                kwds[k] = v[i]
+            y_adj = y_adjs[i]
+
+            ax = self.axd[index]
+            vis_utils.errorbar_forestplot(
+                ax=ax, 
+                y_index=self.y_index,
+                df=dfM,
+                y_adj=y_adj,
+                **kwds,
+            )
+
+    def h_multi_errorbar(self,
+                         df: pd.DataFrame,
+                         by: str,
+                         order: Optional[List[str]] = None,
+                         y_adj: float = 0.0,
+                         multi_kwds: Optional[Dict[str, list]] = None,
+                         **kwds):
+        """Horizontal multiple errorbar plots. 
+
+        Args:
+            df: Dataframe to be stratified.
+            by: Dataframe is stratified by this column.
+            order: If specified, column items are plotted by this order.
+            y_adj: For this value, points are moved vertically. 
+            multi_kwds: Options changed over each plotting are 
+                specified by this parameter.
+            kwds: Passsed to ForestPlot.errorbar.
+        """
+        order, n, multi_kwds = \
+            self._prepare_multi_errorbar_args(df, by, order, multi_kwds)
+
+        for i, item in enumerate(order):
+            dfM = df[df[by] == item]
+
+            for k, v in multi_kwds.items():
+                kwds[k] = v[i]
+
+            ax_ind = self.fig_ax_index[i]
+            ax = self.axd[ax_ind]
+            vis_utils.errorbar_forestplot(
+                ax=ax, 
+                y_index=self.y_index,
+                df=dfM,
+                y_adj=y_adj,
+                **kwds,
+            )
 
     def embed_strings(self, 
                       index: int,
@@ -252,12 +343,16 @@ class ForestPlot():
     def draw_horizontal_line(self,
                              y: float,
                              scale: float = 0.1,
-                             kwds: dict = None
+                             **kwds,
                              ):
         """Draw horizontal line.
+
+        Args:
+            kwds: Passed to ax.axhline.
         """
-        if kwds is None:
-            kwds = dict(lw=1, ls="-", color="black")
+        def_kwds = dict(lw=1, ls="-", color="black")
+        kwds = vis_utils.set_default_keywords(kwds, def_kwds)
+
         for i,ax in self.axd.items():
             xmin = 0
             xmax = 1
@@ -268,7 +363,7 @@ class ForestPlot():
                        zorder=-10, clip_on=False, **kwds)
 
     def horizontal_variable_separators(self, scale: float = 0.1,
-                                       kwds: dict = None):
+                                       **kwds):
         """Draw horizontal lines for seprating variables.
 
         Args:
@@ -277,7 +372,7 @@ class ForestPlot():
         hlines = self.y_index_cate.copy() + 0.5
 
         for y in hlines:
-            self.draw_horizontal_line(y=y, scale=scale, kwds=kwds)
+            self.draw_horizontal_line(y=y, scale=scale, **kwds)
 
     def draw_outer_marker(self, 
                           index: int,
@@ -285,16 +380,28 @@ class ForestPlot():
                           upper: Union[str, int] = 1,
                           lower_marker=4,
                           upper_marker=5,
+                          y_adj: float = 0,
                           df: Optional[pd.DataFrame] = None,
                           log_scale: bool = False,
-                          kwds: dict = None,
-                          scale: float = 0
+                          scale: float = 0,
+                          **kwds,
                           ):
+        """Draw markers to indicate outer range of confidence intervals.
+
+        Args:
+            y_adj: For this value, points are moved vertically. 
+            scale: Control position of markers. 
+                scale * x range is slided towards inside. 
+            kwds: Passed to ax.scatter.
+        """
         ax = self.axd[index]
-        if kwds is None:
-            kwds = dict(s=20, color="black")
+
+        def_kwds = dict(s=20, color="black")
+        kwds = vis_utils.set_default_keywords(kwds, def_kwds)
+
         if df is None:
             df = self.df
+        df = df.copy()
         if log_scale:
             df[lower] = np.log(df[lower])
             df[upper] = np.log(df[upper])
@@ -311,10 +418,28 @@ class ForestPlot():
                      .mask(df[upper] >= xmax, xmax - diff*scale)
                      )
 
-        ax.scatter(ser_lower, self.y_index, zorder=5, 
+        y_index = self.y_index + y_adj
+        ax.scatter(ser_lower, y_index, zorder=5, 
                    marker=lower_marker, **kwds)
-        ax.scatter(ser_upper, self.y_index, zorder=5, 
+        ax.scatter(ser_upper, y_index, zorder=5, 
                    marker=upper_marker, **kwds)
+
+    def ax_method_to_figs(self, 
+                          method: str, 
+                          *args, **kwds):
+        """Apply axis method to all the figure fields.
+
+        Args:
+            method: Name of axis method.
+            fig_ax_index: If not specified, apply to all figs.
+                If specified, apply to specified index axis fields.
+            *args: Passed to a specified method.
+            **kwds: Passed to a specified method.
+        """
+        for ind in self.fig_ax_index:
+            ax = self.axd[ind]
+            f = getattr(ax, method)
+            f(*args, **kwds)
 
 
 @dataclass(repr=True)
@@ -347,6 +472,9 @@ class SimpleForestPlot(ForestPlot):
         args = (2,) + args
         super().draw_outer_marker(*args, **kwds)
 
+    def v_multi_errorbar(self, *args, **kwds):
+        args = (2,) + args
+        super().v_multi_errorbar(*args, **kwds)
 
 
 

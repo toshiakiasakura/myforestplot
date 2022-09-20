@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>myforestplot.vis_utils &mdash; myforestplot 0.2.1 documentation</title>
+  <title>myforestplot.vis_utils &mdash; myforestplot 0.2.2 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="canonical" href="https://toshiakiasakura.github.io/myforestplot/_modules/myforestplot/vis_utils.html" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -18,7 +19,17 @@
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZF7MFCTQG3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3S0FLX78GH');
+</script>
+
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,8 +54,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Gallery:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/2_gallery.html">SingleForestPlot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/2_gallery.html#Draw-markers-for-outer-range-of-confidence-intervals">Draw markers for outer range of confidence intervals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/2_gallery.html">SimpleForestPlot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/2_gallery.html#ForestPlot">ForestPlot</a></li>
 </ul>
 
@@ -83,9 +93,10 @@
 <div class="viewcode-block" id="obtain_indexes_from_category_item"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.vis_utils.obtain_indexes_from_category_item">[docs]</a><span class="k">def</span> <span class="nf">obtain_indexes_from_category_item</span><span class="p">(</span><span class="n">ser_cate</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
                                       <span class="n">ser_item</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
                                       <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Create index for category and item from series of category and item</span>
-<span class="sd">    for vertically aligned labels and errorbar plot.</span>
-<span class="sd">    It is noted that index has negative continuous values, starting from 0 to -n.</span>
+    <span class="sd">&quot;&quot;&quot;Create index for category and item from series of </span>
+<span class="sd">    category and item for vertically aligned labels and errorbar plot.</span>
+<span class="sd">    It is noted that index has negative continuous values, </span>
+<span class="sd">    starting from 0 to -n.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        ser_cate: Series of categories matched with ser_item.</span>
@@ -146,18 +157,24 @@
 <span class="sd">        label: Label for stratified drawings. Passed to ax.errorbar.</span>
 <span class="sd">        log_scale: Plot risk in log scale (np.log).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">errorbar_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">errorbar_kwds</span><span class="p">[</span><span class="s2">&quot;ecolor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">errorbar_color</span>
+        <span class="n">errorbar_kwds</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">errorbar_color</span>
+    <span class="k">if</span> <span class="n">ref_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ref_kwds</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref_color</span>
+
     <span class="n">y_index</span> <span class="o">=</span> <span class="n">y_index</span> <span class="o">+</span> <span class="n">y_adj</span>
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">errorbar_kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">errorbar_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span>
+    <span class="n">def_errorbar_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span>
                              <span class="n">capsize</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                              <span class="n">markeredgecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
                              <span class="n">ecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
                              <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span>
                              <span class="p">)</span>
-    <span class="k">if</span> <span class="n">ref_kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ref_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+    <span class="n">errorbar_kwds</span> <span class="o">=</span> <span class="n">set_default_keywords</span><span class="p">(</span><span class="n">errorbar_kwds</span><span class="p">,</span> <span class="n">def_errorbar_kwds</span><span class="p">)</span>
+    <span class="n">def_ref_kwds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+    <span class="n">ref_kwds</span> <span class="o">=</span> <span class="n">set_default_keywords</span><span class="p">(</span><span class="n">ref_kwds</span><span class="p">,</span> <span class="n">def_ref_kwds</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">log_scale</span><span class="p">:</span>
         <span class="n">df</span><span class="p">[</span><span class="n">risk</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">risk</span><span class="p">])</span>
@@ -172,13 +189,14 @@
                 <span class="n">y_index</span><span class="p">[</span><span class="n">cond</span><span class="p">],</span>
                 <span class="n">xerr</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">cond</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;xerr_lower&quot;</span><span class="p">,</span> <span class="s2">&quot;xerr_upper&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
                 <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
+                <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                 <span class="o">**</span><span class="n">errorbar_kwds</span>
                 <span class="p">)</span>
 
     <span class="n">cond</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">risk</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
     <span class="n">ref_v</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">log_scale</span> <span class="k">else</span> <span class="mi">1</span>
     <span class="n">df</span><span class="p">[</span><span class="s2">&quot;ref&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">risk</span><span class="p">]</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">ref_v</span><span class="p">)</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="o">~</span><span class="n">cond</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;ref&quot;</span><span class="p">],</span> <span class="n">y_index</span><span class="p">,</span> <span class="o">**</span><span class="n">ref_kwds</span><span class="p">)</span></div>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;ref&quot;</span><span class="p">],</span> <span class="n">y_index</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="o">**</span><span class="n">ref_kwds</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="embed_strings_forestplot"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.vis_utils.embed_strings_forestplot">[docs]</a><span class="k">def</span> <span class="nf">embed_strings_forestplot</span><span class="p">(</span>
@@ -214,6 +232,15 @@
         <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
                 <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span> <span class="o">**</span><span class="n">text_kwds</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="set_default_keywords"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.vis_utils.set_default_keywords">[docs]</a><span class="k">def</span> <span class="nf">set_default_keywords</span><span class="p">(</span><span class="n">kwds</span> <span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">def_kwds</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Set default keywords arguments.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">kwds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">kwds</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">def_kwds</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">kwds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">kwds</span></div>
 </pre></div>
 
            </div>
