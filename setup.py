@@ -32,6 +32,7 @@ setup(
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.9',
+        'Framework :: Matplotlib',
     ], # パッケージ(プロジェクト)の分類。https://pypi.org/classifiers/に掲載されているものを指定可能。
 )
 
