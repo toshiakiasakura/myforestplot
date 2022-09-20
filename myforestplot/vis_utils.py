@@ -72,6 +72,12 @@ def errorbar_forestplot(
         label: Label for stratified drawings. Passed to ax.errorbar.
         log_scale: Plot risk in log scale (np.log).
     """
+    if errorbar_color is not None:
+        errorbar_kwds["ecolor"] = errorbar_color
+        errorbar_kwds["color"] = errorbar_color
+    if ref_color is not None:
+        ref_kwds["color"] = ref_color
+
     y_index = y_index + y_adj
 
     df = df.copy()

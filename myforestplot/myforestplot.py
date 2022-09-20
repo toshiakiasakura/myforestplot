@@ -1,5 +1,7 @@
 from typing import Union, Optional, List, Dict, Tuple, Any
 from dataclasses import dataclass, field
+import copy
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -149,11 +151,6 @@ class ForestPlot():
         ax = self.axd[index]
         if df is None:
             df = self.df
-        if errorbar_color is not None:
-            errorbar_kwds["ecolor"] = errorbar_color
-            errorbar_kwds["color"] = errorbar_color
-        if ref_color is not None:
-            ref_kwds["color"] = ref_color
 
         vis_utils.errorbar_forestplot(
             ax=ax, 
@@ -170,6 +167,97 @@ class ForestPlot():
             label=label,
             log_scale=log_scale,
         )
+
+    def _prepare_multi_errorbar_args(self, df, by, order, multi_kwds):
+        if order is None:
+            order = df[by].unique()
+        n = len(order)
+        if n == 1:
+            raise Exception("Number of stratified items should be more than one")
+
+        if multi_kwds is None:
+            multi_kwds = {}
+
+        return(order, n, multi_kwds)
+    
+    def v_multi_errorbar(self, 
+                         index: int, 
+                         df: pd.DataFrame,
+                         by: str, 
+                         order: Optional[List[str]] = None,
+                         scale: float = 0.4,
+                         multi_kwds: Optional[Dict[str, list]] = None,
+                         **kwds):
+        """Verticle multiple errorbar plots. 
+
+        Args:
+            index: To draw points to this fig_ax_index field.
+            df: Dataframe to be stratified.
+            by: Dataframe is stratified by this column.
+            order: If specified, column items are plotted by this order.
+            scale: [-scale, scale] is set to be a range of y_adj.
+            multi_kwds: Options changed over each plotting are 
+                specified by this parameter.
+            kwds: Passsed to ForestPlot.errorbar.
+        """
+        order, n, multi_kwds = \
+            self._prepare_multi_errorbar_args(df, by, order, multi_kwds)
+
+        y_adjs = [0.5 - 1/(n - 1)*i for i in range(n)]
+        y_adjs = np.array(y_adjs)*2*scale
+
+        for i, item in enumerate(order):
+            dfM = df[df[by] == item]
+
+            for k, v in multi_kwds.items():
+                kwds[k] = v[i]
+            y_adj = y_adjs[i]
+
+            ax = self.axd[index]
+            vis_utils.errorbar_forestplot(
+                ax=ax, 
+                y_index=self.y_index,
+                df=dfM,
+                y_adj=y_adj,
+                **kwds,
+            )
+
+    def h_multi_errorbar(self,
+                         df: pd.DataFrame,
+                         by: str,
+                         order: Optional[List[str]] = None,
+                         y_adj: float = 0.0,
+                         multi_kwds: Optional[Dict[str, list]] = None,
+                         **kwds):
+        """Horizontal multiple errorbar plots. 
+
+        Args:
+            df: Dataframe to be stratified.
+            by: Dataframe is stratified by this column.
+            order: If specified, column items are plotted by this order.
+            y_adj: For this value, points are moved vertically. 
+            multi_kwds: Options changed over each plotting are 
+                specified by this parameter.
+            kwds: Passsed to ForestPlot.errorbar.
+        """
+        order, n, multi_kwds = \
+            self._prepare_multi_errorbar_args(df, by, order, multi_kwds)
+
+        for i, item in enumerate(order):
+            dfM = df[df[by] == item]
+
+            for k, v in multi_kwds.items():
+                kwds[k] = v[i]
+
+            ax_ind = self.fig_ax_index[i]
+            ax = self.axd[ax_ind]
+            vis_utils.errorbar_forestplot(
+                ax=ax, 
+                y_index=self.y_index,
+                df=dfM,
+                y_adj=y_adj,
+                **kwds,
+            )
 
     def embed_strings(self, 
                       index: int,
@@ -384,6 +472,9 @@ class SimpleForestPlot(ForestPlot):
         args = (2,) + args
         super().draw_outer_marker(*args, **kwds)
 
+    def v_multi_errorbar(self, *args, **kwds):
+        args = (2,) + args
+        super().v_multi_errorbar(*args, **kwds)
 
 
 
