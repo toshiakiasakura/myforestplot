@@ -135,7 +135,7 @@ class ForestPlot():
             risk: Column name for risk.
             lower: Column name for lower confidence interval.
             upper: Column name for upper confidence interval.
-            y_adj: For this value, plotting is moved. 
+            y_adj: For this value, points are moved vertically. 
             errorbar_kwds: Passed to ax.errorbar function.
             ref_kwds: Passed to ax.scatter function.
             df: Dataframe for another result.
@@ -292,6 +292,7 @@ class ForestPlot():
                           upper: Union[str, int] = 1,
                           lower_marker=4,
                           upper_marker=5,
+                          y_adj: float = 0,
                           df: Optional[pd.DataFrame] = None,
                           log_scale: bool = False,
                           scale: float = 0,
@@ -300,6 +301,7 @@ class ForestPlot():
         """Draw markers to indicate outer range of confidence intervals.
 
         Args:
+            y_adj: For this value, points are moved vertically. 
             scale: Control position of markers. 
                 scale * x range is slided towards inside. 
             kwds: Passed to ax.scatter.
@@ -311,6 +313,7 @@ class ForestPlot():
 
         if df is None:
             df = self.df
+        df = df.copy()
         if log_scale:
             df[lower] = np.log(df[lower])
             df[upper] = np.log(df[upper])
@@ -327,9 +330,10 @@ class ForestPlot():
                      .mask(df[upper] >= xmax, xmax - diff*scale)
                      )
 
-        ax.scatter(ser_lower, self.y_index, zorder=5, 
+        y_index = self.y_index + y_adj
+        ax.scatter(ser_lower, y_index, zorder=5, 
                    marker=lower_marker, **kwds)
-        ax.scatter(ser_upper, self.y_index, zorder=5, 
+        ax.scatter(ser_upper, y_index, zorder=5, 
                    marker=upper_marker, **kwds)
 
 
