@@ -20,6 +20,7 @@ def statsmodels_fitting_result_dataframe(
     """
     df = accessor(res.conf_int(alpha=0.05))
     df["risk"] = accessor(res.params)
+    df["pvalues"] = res.pvalues
 
     cate = "category"
     df[cate] = np.nan
