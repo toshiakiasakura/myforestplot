@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>myforestplot.cleaning_utils &mdash; myforestplot 0.1.9 documentation</title>
+  <title>myforestplot.cleaning_utils &mdash; myforestplot 0.2.2 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="canonical" href="https://toshiakiasakura.github.io/myforestplot/_modules/myforestplot/cleaning_utils.html" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -18,7 +19,17 @@
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZF7MFCTQG3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3S0FLX78GH');
+</script>
+
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,7 +54,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Gallery:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/2_gallery.html">BaseForestplot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/2_gallery.html">SimpleForestPlot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/2_gallery.html#ForestPlot">ForestPlot</a></li>
 </ul>
 
         </div>
@@ -93,6 +105,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">accessor</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">conf_int</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">))</span>
     <span class="n">df</span><span class="p">[</span><span class="s2">&quot;risk&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">accessor</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pvalues&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">pvalues</span>
 
     <span class="n">cate</span> <span class="o">=</span> <span class="s2">&quot;category&quot;</span>
     <span class="n">df</span><span class="p">[</span><span class="n">cate</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>

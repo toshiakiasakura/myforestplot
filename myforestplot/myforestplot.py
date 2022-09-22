@@ -570,4 +570,3 @@ class SimpleForestPlot(ForestPlot):
         super().v_multi_embed_strings(*args, **kwds)
 
 
-

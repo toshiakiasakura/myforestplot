@@ -204,7 +204,7 @@
     <span class="n">ser</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
     <span class="n">y_index</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span>
     <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">header</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">header</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="n">fontsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">y_header</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">text_kwds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -241,6 +241,19 @@
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">def_kwds</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">kwds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">kwds</span></div>
+
+
+<div class="viewcode-block" id="get_multiple_y_adjs"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.vis_utils.get_multiple_y_adjs">[docs]</a><span class="k">def</span> <span class="nf">get_multiple_y_adjs</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;For multiple vertical plotting, automatic adjustments of </span>
+<span class="sd">    y_adj for y_index is needed.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n: Number of stratificaitons to be plotted.</span>
+<span class="sd">        scale: [-scale, scale] is set to be a range of y_adj.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">y_adjs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+    <span class="n">y_adjs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_adjs</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">scale</span>
+    <span class="k">return</span> <span class="n">y_adjs</span></div>
 </pre></div>
 
            </div>

@@ -253,9 +253,7 @@
             <span class="n">log_scale</span><span class="o">=</span><span class="n">log_scale</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_prepare_multi_errorbar_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">multi_kwds</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">order</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">order</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">by</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">_prepare_multi_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">multi_kwds</span><span class="p">):</span>
         <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Number of stratified items should be more than one&quot;</span><span class="p">)</span>
@@ -269,7 +267,7 @@
                          <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
                          <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
                          <span class="n">by</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
-                         <span class="n">order</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                         <span class="n">order</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                          <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span>
                          <span class="n">multi_kwds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                          <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
@@ -286,10 +284,9 @@
 <span class="sd">            kwds: Passsed to ForestPlot.errorbar.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">order</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">multi_kwds</span> <span class="o">=</span> \
-            <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_multi_errorbar_args</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">multi_kwds</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_multi_args</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">multi_kwds</span><span class="p">)</span>
 
-        <span class="n">y_adjs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
-        <span class="n">y_adjs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_adjs</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">scale</span>
+        <span class="n">y_adjs</span> <span class="o">=</span> <span class="n">vis_utils</span><span class="o">.</span><span class="n">get_multiple_y_adjs</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">order</span><span class="p">):</span>
             <span class="n">dfM</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">by</span><span class="p">]</span> <span class="o">==</span> <span class="n">item</span><span class="p">]</span>
@@ -310,7 +307,7 @@
 <div class="viewcode-block" id="ForestPlot.h_multi_errorbar"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.ForestPlot.h_multi_errorbar">[docs]</a>    <span class="k">def</span> <span class="nf">h_multi_errorbar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                          <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
                          <span class="n">by</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                         <span class="n">order</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                         <span class="n">order</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                          <span class="n">y_adj</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
                          <span class="n">multi_kwds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                          <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
@@ -319,14 +316,14 @@
 <span class="sd">        Args:</span>
 <span class="sd">            df: Dataframe to be stratified.</span>
 <span class="sd">            by: Dataframe is stratified by this column.</span>
-<span class="sd">            order: If specified, column items are plotted by this order.</span>
+<span class="sd">            order: Column items are plotted by this order.</span>
 <span class="sd">            y_adj: For this value, points are moved vertically. </span>
 <span class="sd">            multi_kwds: Options changed over each plotting are </span>
 <span class="sd">                specified by this parameter.</span>
 <span class="sd">            kwds: Passsed to ForestPlot.errorbar.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">order</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">multi_kwds</span> <span class="o">=</span> \
-            <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_multi_errorbar_args</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">multi_kwds</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_multi_args</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">multi_kwds</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">order</span><span class="p">):</span>
             <span class="n">dfM</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">by</span><span class="p">]</span> <span class="o">==</span> <span class="n">item</span><span class="p">]</span>
@@ -393,7 +390,7 @@
                            <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                            <span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                            <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                           <span class="n">header</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                           <span class="n">header</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
                            <span class="n">fontsize</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                            <span class="n">y_header</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
                            <span class="n">y_adj</span> <span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
@@ -424,6 +421,98 @@
             <span class="n">header_kwds</span><span class="o">=</span><span class="n">header_kwds</span><span class="p">,</span>
             <span class="n">replace</span><span class="o">=</span><span class="n">replace</span>
         <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ForestPlot.v_multi_embed_strings"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.ForestPlot.v_multi_embed_strings">[docs]</a>    <span class="k">def</span> <span class="nf">v_multi_embed_strings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                              <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                              <span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                              <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+                              <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                              <span class="n">by</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                              <span class="n">order</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                              <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span>
+                              <span class="n">multi_kwds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                              <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Embed strings for multiple text fileds for stratified dataframe.</span>
+<span class="sd">        fig_ax_index nad x takes one value or list types.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">order</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">multi_kwds</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_multi_args</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">multi_kwds</span><span class="p">)</span>
+
+        <span class="n">y_adjs</span> <span class="o">=</span> <span class="n">vis_utils</span><span class="o">.</span><span class="n">get_multiple_y_adjs</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">order</span><span class="p">):</span>
+            <span class="n">ser</span><span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">by</span><span class="p">]</span> <span class="o">==</span> <span class="n">item</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">multi_kwds</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">kwds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">y_adj</span> <span class="o">=</span> <span class="n">y_adjs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="n">y_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_index</span> <span class="o">+</span> <span class="n">y_adj</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axd</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+            <span class="n">vis_utils</span><span class="o">.</span><span class="n">embed_strings_forestplot</span><span class="p">(</span>
+                <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> 
+                <span class="n">ser</span><span class="o">=</span><span class="n">ser</span><span class="p">,</span>
+                <span class="n">y_index</span><span class="o">=</span><span class="n">y_index</span><span class="p">,</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwds</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ForestPlot.h_multi_embed_strings"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.ForestPlot.h_multi_embed_strings">[docs]</a>    <span class="k">def</span> <span class="nf">h_multi_embed_strings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                              <span class="n">fig_ax_index</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span>
+                              <span class="n">col</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                              <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+                              <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                              <span class="n">by</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                              <span class="n">order</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                              <span class="n">y_adj</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+                              <span class="n">multi_kwds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                              <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Embed strings for multiple text fileds for stratified dataframe.</span>
+<span class="sd">        fig_ax_index nad x takes one value or list types.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fig_ax_index: Should be same as stratified group items. </span>
+<span class="sd">            x: x axis value of text position, ranging from 0 to 1.</span>
+<span class="sd">            df: DataFrame to be plotted.</span>
+<span class="sd">            by: Dataframe is stratified by this column.</span>
+<span class="sd">            order: Column items are plotted by this order.</span>
+<span class="sd">            col: Columns to be used for strings.</span>
+<span class="sd">            **kwds: Passed to myforestplot.vis_utils.embed_strings_forestplot. </span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            myforestplot.vis_utils.embed_strings_forestplot</span>
+<span class="sd">            myforestplot.myforestplot.ForestPlot.embed_strings</span>
+<span class="sd">            myforestplot.myforestplot.ForestPlot.embed_cate_strings</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">order</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">multi_kwds</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_multi_args</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">multi_kwds</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fig_ax_index</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Length of fig_ax_index and order should be same!&quot;</span><span class="p">)</span>
+
+        <span class="c1"># For flexibility, check multiplicity. </span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fig_ax_index</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">fig_ax_index</span> <span class="o">=</span> <span class="p">[</span><span class="n">fig_ax_index</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">order</span><span class="p">):</span>
+            <span class="n">ser</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">by</span><span class="p">]</span> <span class="o">==</span> <span class="n">item</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+            <span class="n">x_pos</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">multi_kwds</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">kwds</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="n">ax_ind</span> <span class="o">=</span> <span class="n">fig_ax_index</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">axd</span><span class="p">[</span><span class="n">ax_ind</span><span class="p">]</span>
+            <span class="n">y_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_index</span> <span class="o">+</span> <span class="n">y_adj</span>
+            <span class="n">vis_utils</span><span class="o">.</span><span class="n">embed_strings_forestplot</span><span class="p">(</span>
+                <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+                <span class="n">ser</span><span class="o">=</span><span class="n">ser</span><span class="p">,</span>
+                <span class="n">y_index</span><span class="o">=</span><span class="n">y_index</span><span class="p">,</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">x_pos</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwds</span>
+            <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ForestPlot.draw_horizontal_line"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.ForestPlot.draw_horizontal_line">[docs]</a>    <span class="k">def</span> <span class="nf">draw_horizontal_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                              <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -559,7 +648,11 @@
 
 <div class="viewcode-block" id="SimpleForestPlot.v_multi_errorbar"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.SimpleForestPlot.v_multi_errorbar">[docs]</a>    <span class="k">def</span> <span class="nf">v_multi_errorbar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
         <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,)</span> <span class="o">+</span> <span class="n">args</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">v_multi_errorbar</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></div></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">v_multi_errorbar</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SimpleForestPlot.v_multi_embed_strings"><a class="viewcode-back" href="../../myforestplot.html#myforestplot.myforestplot.SimpleForestPlot.v_multi_embed_strings">[docs]</a>    <span class="k">def</span> <span class="nf">v_multi_embed_strings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">args</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">v_multi_embed_strings</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span></div></div>
 
 
 
