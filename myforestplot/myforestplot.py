@@ -168,9 +168,7 @@ class ForestPlot():
             log_scale=log_scale,
         )
 
-    def _prepare_multi_errorbar_args(self, df, by, order, multi_kwds):
-        if order is None:
-            order = df[by].unique()
+    def _prepare_multi_args(self, order, multi_kwds):
         n = len(order)
         if n == 1:
             raise Exception("Number of stratified items should be more than one")
@@ -184,7 +182,7 @@ class ForestPlot():
                          index: int, 
                          df: pd.DataFrame,
                          by: str, 
-                         order: Optional[List[str]] = None,
+                         order: List[str],
                          scale: float = 0.4,
                          multi_kwds: Optional[Dict[str, list]] = None,
                          **kwds):
@@ -201,7 +199,7 @@ class ForestPlot():
             kwds: Passsed to ForestPlot.errorbar.
         """
         order, n, multi_kwds = \
-            self._prepare_multi_errorbar_args(df, by, order, multi_kwds)
+            self._prepare_multi_args(order, multi_kwds)
 
         y_adjs = [0.5 - 1/(n - 1)*i for i in range(n)]
         y_adjs = np.array(y_adjs)*2*scale
@@ -225,7 +223,7 @@ class ForestPlot():
     def h_multi_errorbar(self,
                          df: pd.DataFrame,
                          by: str,
-                         order: Optional[List[str]] = None,
+                         order: List[str],
                          y_adj: float = 0.0,
                          multi_kwds: Optional[Dict[str, list]] = None,
                          **kwds):
@@ -234,14 +232,14 @@ class ForestPlot():
         Args:
             df: Dataframe to be stratified.
             by: Dataframe is stratified by this column.
-            order: If specified, column items are plotted by this order.
+            order: Column items are plotted by this order.
             y_adj: For this value, points are moved vertically. 
             multi_kwds: Options changed over each plotting are 
                 specified by this parameter.
             kwds: Passsed to ForestPlot.errorbar.
         """
         order, n, multi_kwds = \
-            self._prepare_multi_errorbar_args(df, by, order, multi_kwds)
+            self._prepare_multi_args(order, multi_kwds)
 
         for i, item in enumerate(order):
             dfM = df[df[by] == item]
