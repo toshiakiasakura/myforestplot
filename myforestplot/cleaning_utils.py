@@ -138,7 +138,7 @@ def sort_category_item(df_: pd.DataFrame,
 def statsmodels_pretty_result_dataframe(
     data: pd.DataFrame,
     res,
-    order: List[str],
+    order: Optional[List[str]] = None,
     cont_cols: Optional[List[str]] = None,
     item_order: Dict[str, List[str]] = None,
     fml: str = ".2f",
@@ -150,20 +150,24 @@ def statsmodels_pretty_result_dataframe(
     Args:
         data: original dataframe.
         res: statsmodels results.
-        categorical: Dictionary containing column names and its order of items.
         order : if specified, category is ordered based on this variable.
+            If not specified, the order of results from statsmodels is used.
+        cont_cols: Columns of continuous variables.
         fml: formula for f string of pretty risk.
-        accessor: Function to access each model result, which is summarized and displayed.
+        accessor: Function to access each model result, 
+            which is summarized and displayed.
     """
     if res.nobs != data.shape[0]:
         raise Exception(("Some observations were dropped when fitted, "
                          "check number of observations"
                         ))
+    df_res = statsmodels_fitting_result_dataframe(res, alpha=0.05, accessor=accessor)
+    if order is None or len(order) == 0:
+        order = df_res.category.unique()
     if cont_cols is None:
         cate_cols = order
     else:
         cate_cols = [c for c in order if not c in cont_cols]
-    df_res = statsmodels_fitting_result_dataframe(res, alpha=0.05, accessor=accessor)
     df_nobs = count_category_frequency(data, cate_cols)
     df_sum = pd.merge(df_res, df_nobs,
                       on=["category", "item"],

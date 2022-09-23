@@ -37,6 +37,7 @@ Installation
 
    notebooks/1_quickstart
    notebooks/3_architecture
+   notebooks/4_practical_examples
 
 .. toctree::
    :maxdepth: 3
