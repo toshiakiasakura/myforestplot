@@ -119,7 +119,7 @@ def embed_strings_forestplot(
     ser: pd.Series,
     y_index: np.array,
     x: float,
-    header: str,
+    header: str = "",
     fontsize: int = None,
     y_header: float = 1.0,
     text_kwds: Optional[dict] = None,
@@ -156,3 +156,16 @@ def set_default_keywords(kwds : Optional[dict], def_kwds: dict) -> dict:
     for k, v in def_kwds.items():
         kwds[k] = kwds.get(k, v)
     return kwds
+
+
+def get_multiple_y_adjs(n: int, scale: float) -> np.array:
+    """For multiple vertical plotting, automatic adjustments of 
+    y_adj for y_index is needed.
+
+    Args:
+        n: Number of stratificaitons to be plotted.
+        scale: [-scale, scale] is set to be a range of y_adj.
+    """
+    y_adjs = [0.5 - 1/(n-1)*i for i in range(n)]
+    y_adjs = np.array(y_adjs)*2*scale
+    return y_adjs
